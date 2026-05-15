@@ -12,9 +12,7 @@ export default function RecipeDetails() {
   useEffect(() => {
     const fetchRecipe = async () => {
       try {
-        // TODO: You can comment this out for now, make a dummy Recipe variable
-        // and use its attributes to design the page (until the API has been implemented)
-        const res = await api.get(`/api/recipes/${recipeId}`);
+        const res = await api.get<Recipe>(`/api/recipes/${recipeId}`);
         setRecipe(res.data);
       } catch (err) {
         setError("Recipe could not be loaded.");
@@ -28,9 +26,65 @@ export default function RecipeDetails() {
   if (!recipe) return <p>Loading recipe...</p>;
 
   return (
-    <div>
-      <h1>{recipe.name}</h1>
-      <p>{recipe.description}</p>
+    // TODO: Messy right now, abstract this out into some components
+    <div className="recipe-details">
+      <h1>{recipe.title}</h1>
+
+      <img
+        className="recipe-details-image"
+        src={recipe.image}
+        alt={recipe.title}
+      />
+
+      <div className="recipe-details-info">
+        <p>Ready in: {recipe.readyInMinutes ?? "Unknown"} minutes</p>
+        <p>Servings: {recipe.servings ?? "Unknown"}</p>
+        <p>Health score: {recipe.healthScore ?? "Unknown"}</p>
+      </div>
+
+      <h2>Summary</h2>
+      <div dangerouslySetInnerHTML={{ __html: recipe.summary }} />
+
+      <h2>Key Nutrients</h2>
+      {recipe.nutrition.nutrients.length > 0 ? (
+        <ul>
+          {recipe.nutrition.nutrients.map((nutrient) => (
+            <li key={nutrient.name}>
+              {nutrient.name}: {nutrient.amount} {nutrient.unit}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No nutrient information available.</p>
+      )}
+
+      <h2>Ingredients</h2>
+      {recipe.ingredients.length > 0 ? (
+        <ul>
+          {recipe.ingredients.map((ingredient) => (
+            <li key={`${ingredient.id}-${ingredient.name}`}>
+              {ingredient.amount} {ingredient.unit} {ingredient.name}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No ingredients available.</p>
+      )}
+
+      <h2>Instructions</h2>
+      {recipe.instructions ? (
+        <div dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
+      ) : (
+        <p>No instructions available.</p>
+      )}
+
+      {recipe.sourceUrl && (
+        <p>
+          <a href={recipe.sourceUrl} target="_blank" rel="noreferrer">
+            View original recipe
+          </a>
+        </p>
+      )}
     </div>
   );
 }
