@@ -99,15 +99,94 @@ app.delete('/api/items/:id', async (req, res) => {
 // for easier frontend implementation for now
 // ============================================
 
+// We're not using recipe-nutrients-sample.json for now
 const recipeData = JSON.parse(
     FileSystem.readFileSync("recipe-info-sample.json", "utf-8")
 );
 
 const recipes = recipeData.results;
 
+const KEY_NUTRIENTS = [
+    "Calories",
+    "Protein",
+    "Fat",
+    "Saturated Fat",
+    "Carbohydrates",
+    "Sugar",
+    "Fiber",
+    "Cholesterol",
+    "Sodium",
+    "Calcium",
+    "Iron",
+    "Potassium",
+    "Magnesium",
+    "Zinc",
+    "Vitamin A",
+    "Vitamin C",
+    "Vitamin D",
+    "Vitamin B12",
+];
+
+const getKeyNutrients = (recipe) => {
+    const nutrients = recipe.nutrition?.nutrients || [];
+
+    return KEY_NUTRIENTS.map((nutrientName) => {
+        const nutrient = nutrients.find((n) => n.name === nutrientName);
+
+        if (!nutrient) return null;
+
+        return {
+            name: nutrient.name,
+            amount: Math.round(nutrient.amount),
+            unit: nutrient.unit,
+            percentOfDailyNeeds: nutrient.percentOfDailyNeeds
+        };
+    }).filter(Boolean);
+};
+
+// Formats the recipe result with the desired attributes
+const formatRecipe = (recipe) => {
+    return {
+        id: recipe.id,
+        image: recipe.image,
+        title: recipe.title,
+        readyInMinutes: recipe.readyInMinutes,
+        servings: recipe.servings,
+        sourceUrl: recipe.sourceUrl,
+
+        // Dietaries
+        vegetarian: recipe.vegetarian,
+        vegan: recipe.vegan,
+        glutenFree: recipe.glutenFree,
+        dairyFree: recipe.dairyFree,
+
+        // Misc info
+        preparationMinutes: recipe.preparationMinutes,
+        cookingMinutes: recipe.cookingMinutes,
+        healthScore: recipe.healthScore,
+
+        ingredients: recipe.ingredients?.map((ingredient) => ({
+            id: ingredient.id,
+            name: ingredient.name,
+            amount: ingredient.amount,
+            unit: ingredient.unit
+        })) || [],
+
+        nutrients: {
+            nutrients: getKeyNutrients(recipe)
+        },
+
+        summary: recipe.summary,
+        cuisines: recipe.cuisines || [],
+        dishTypes: recipe.dishTypes || [],
+        diets: recipe.diets || [],
+        instructions: recipe.instructions
+    };
+};
+
 // GET /api/recipes
 app.get('/api/recipes', (req, res) => {
-    res.json({ results: recipes });
+    res.json({ results: recipes.map(formatRecipe) });
 });
 
 // Search for an item with query
@@ -117,7 +196,7 @@ app.get('/api/recipes/search', (req, res) => {
         recipe.title.toLowerCase().includes(query)
     });
 
-    res.json({ results: filteredRecipes });
+    res.json({ results: filteredRecipes.map(formatRecipe) });
 });
 
 // GET /api/recipes/:id
@@ -130,7 +209,7 @@ app.get('/api/recipes/:id', (req, res) => {
         return res.status(404).json({ error: "Recipe not found" });
     }
 
-    res.json(recipe);
+    res.json(formatRecipe(recipe));
 });
 
 // ============================================
