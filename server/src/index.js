@@ -95,6 +95,45 @@ app.delete('/api/items/:id', async (req, res) => {
 });
 
 // ============================================
+// TESTING ROUTES - These return the dummy data
+// for easier frontend implementation for now
+// ============================================
+
+const recipeData = JSON.parse(
+    FileSystem.readFileSync("recipe-info-sample.json", "utf-8")
+);
+
+const recipes = recipeData.results;
+
+// GET /api/recipes
+app.get('/api/recipes', (req, res) => {
+    res.json({ results: recipes });
+});
+
+// Search for an item with query
+app.get('/api/recipes/search', (req, res) => {
+    const query = req.query.query?.toLowerCase() || "";
+    const filteredRecipes = recipes.filter((recipe) => {
+        recipe.title.toLowerCase().includes(query)
+    });
+
+    res.json({ results: filteredRecipes });
+});
+
+// GET /api/recipes/:id
+app.get('/api/recipes/:id', (req, res) => {
+    const recipeId = Number(req.params.id);
+
+    const recipe = recipes.find((recipe) => recipe.id === recipeId);
+
+    if (!recipe) {
+        return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    res.json(recipe);
+});
+
+// ============================================
 // Start Server
 // ============================================
 app.listen(PORT, () => {
