@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import Item from './models/Item.js';
 import fs from 'fs';
+import Recipe from './models/Recipe.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ connectDB();
 
 // ============================================
 // ROUTES - These handle requests from frontend
+// (replace test routes when done, remove 'v2')
 // ============================================
 
 // Health Check - Test if server is running
@@ -36,38 +38,43 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'Server is running' });
 });
 
-// GET all items from database
-app.get('/api/items', async (req, res) => {
+// GET all recipes from database
+app.get('/api/v2/recipes', async (req, res) => {
     try {
-        const items = await Item.find();
-        res.json(items);
+        const recipes = await Recipe.find();
+        res.json(recipes);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// GET single item by ID
-app.get('/api/items/:id', async (req, res) => {
+// GET single recipe by ID
+app.get('/api/v2/recipes/:id', async (req, res) => {
     try {
-        const item = await Item.findById(req.params.id);
-        if (!item) {
-            return res.status(404).json({ error: 'Item not found' });
+        const recipe = await Recipe.findById(req.params.id);
+        if (!recipe) {
+            return res.status(404).json({ error: 'Recipe not found' });
         }
-        res.json(item);
+        res.json(recipe);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// CREATE a new item
-app.post('/api/items', async (req, res) => {
+// CREATE a new recipe
+app.post('/api/create-recipe', async (req, res) => {
     try {
-        const newItem = await Item.create(req.body);
-        res.status(201).json(newItem);
+        const newRecipe = await Recipe.create(req.body);
+        res.status(201).json(newRecipe);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
+
+// Unused routes (implement frontend first)
+
+// TODO: For these, check if the user actually owns this recipe
+// and is authenticated to modify them
 
 // UPDATE an item
 app.put('/api/items/:id', async (req, res) => {
