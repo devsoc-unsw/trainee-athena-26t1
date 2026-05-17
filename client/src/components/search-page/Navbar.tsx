@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Bookmark, User, Search, Menu, X } from "lucide-react";
 import "./Navbar.css";
 
 export type Filters = {
@@ -81,7 +80,7 @@ export default function Navbar() {
             onClick={() => setShowFilters((v) => !v)}
             aria-label="Filters"
           >
-            <Menu size={18} color="#666" />
+					<i className="bi bi-list" style={{ fontSize: '18px', color: '#666' }} />
             {activeFilterCount > 0 && (
               <span className="navbar-filter-dot">{activeFilterCount}</span>
             )}
@@ -96,7 +95,7 @@ export default function Navbar() {
             onKeyDown={(e) => e.key === "Enter" && doSearch()}
           />
           <button className="navbar-search-btn" onClick={doSearch} aria-label="Search">
-            <Search size={18} color="#666" />
+            <i className="bi bi-search" style={{ fontSize: '18px', color: '#666' }} />
           </button>
         </div>
 
@@ -105,7 +104,7 @@ export default function Navbar() {
             <div className="filter-header">
               <span className="filter-title">Filters</span>
               <button className="filter-reset" onClick={resetFilters}>
-                <X size={14} /> Reset
+                <i className="bi bi-x" style={{ fontSize: '14px' }} /> Reset
               </button>
             </div>
 
@@ -172,10 +171,10 @@ export default function Navbar() {
 
       <div className="navbar-actions">
         <Link to="/saved-recipes" className="navbar-icon-btn" aria-label="Saved recipes">
-          <Bookmark size={22} color="#fff" />
+          <i className="bi bi-bookmark" style={{ fontSize: '22px', color: '#fff' }} />
         </Link>
         <Link to="/profile" className="navbar-icon-btn" aria-label="Profile">
-          <User size={22} color="#fff" />
+          <i className="bi bi-person" style={{ fontSize: '22px', color: '#fff' }} />
         </Link>
       </div>
     </nav>
