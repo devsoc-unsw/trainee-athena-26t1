@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import Item from './models/Item.js';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -101,10 +102,17 @@ app.delete('/api/items/:id', async (req, res) => {
 
 // We're not using recipe-nutrients-sample.json for now
 const recipeData = JSON.parse(
-    FileSystem.readFileSync("recipe-info-sample.json", "utf-8")
+    fs.readFileSync("recipe-info-sample.json", "utf-8")
 );
 
-const recipes = recipeData.results;
+const recipes = recipeData.results.filter((recipe) =>
+    recipe.id &&
+    recipe.title &&
+    recipe.image &&
+    recipe.readyInMinutes &&
+    recipe.servings &&
+    recipe.nutrition?.nutrients?.length > 0
+);
 
 const KEY_NUTRIENTS = [
     "Calories",
@@ -172,7 +180,7 @@ const formatRecipe = (recipe) => {
             unit: ingredient.unit
         })) || [],
 
-        nutrients: {
+        nutrition: {
             nutrients: getKeyNutrients(recipe)
         },
 
