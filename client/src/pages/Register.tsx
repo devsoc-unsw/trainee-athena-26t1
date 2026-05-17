@@ -1,32 +1,52 @@
 import "./Register.css"
 import { Box, Stack, TextField, Checkbox, FormControlLabel, Link, Button } from '@mui/material'
 
-export default function Login() {
+export default function Register() {
   return (
-    <div className="loginBackground">
-      <div className="loginMaster">
-        <Stack spacing={2} sx={{width: "100%", alignItems: "center"}}>
-          <Box sx={{height:"80px", bgcolor: 'green', width: "100%"}}></Box>
-          <Box className="logo" >
-            <Box className="logoMeal" sx={{boxShadow: 6}}>Meal</Box>
-            <Box className="logoMatrix" sx={{boxShadow: 6}}>Matrix</Box>
+    <div className="registerMainPage">
+      <div className="registerBackground">
+
+      </div>
+
+      <div className="registerMaster">
+        <Stack spacing={2} sx={{ width: "100%", alignItems: "center" }}>
+          <Box sx={{ height: "80px", bgcolor: 'green', width: "100%" }}></Box>
+
+          <Box className="registerLogo">
+            <Box className="registerLogoMeal" sx={{ boxShadow: 6 }}>Meal</Box>
+            <Box className="registerLogoMatrix" sx={{ boxShadow: 6 }}>Matrix</Box>
           </Box>
-          <Box sx={{height: 30}}></Box>
-          <TextField id="outlined-basic" className="input" label="Enter your email here"></TextField>
-          <TextField id="outlined-basic" className="input" label="Enter your password here"></TextField>
-          <Stack direction={{xs: "column", md:"row"}} sx={{justifyContent:"space-evenly", width:"100%", alignItems:"center"}}>
-            <FormControlLabel control={<Checkbox/>} label="Keep me signed in" />
+
+          <Box sx={{ height: 30 }}></Box>
+
+          <TextField className="registerInput" label="Enter your email here" />
+          <TextField className="registerInput" label="Enter your password here" />
+
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            sx={{ justifyContent: "space-around", width: "100%", alignItems: "center" }}
+          >
+            <FormControlLabel control={<Checkbox />} label="Keep me signed in" />
             <Link href="ADD LINK HERE">
               Forgot Password?
             </Link>
           </Stack>
-          <Box sx={{height: 15}}></Box>
-          <Stack direction={{xs: "column", md:"row"}} sx={{justifyContent: "space-evenly", width:"100%", alignItems:"center"}}>
-            <Button variant="contained" sx={{bgcolor:"green", height:"80px", width:{xs:"80%", md:"31%"}, marginTop:2}}>Register</Button>
-            <Button variant="contained" sx={{bgcolor:"red", height:"80px", width:{xs:"80%", md:"31%"}, marginTop:2}}>Cancel</Button>
+
+          <Box sx={{ height: 15 }}></Box>
+
+          <Stack
+            direction={{ xs: "column", md: "row" }}
+            sx={{ justifyContent: "space-evenly", width: "100%", alignItems: "center" }}
+          >
+            <Button
+              variant="contained"
+              sx={{ bgcolor: "green", height: "80px", width: "74%", marginTop: 2 }}
+            >
+              Register
+            </Button>
           </Stack>
         </Stack>
       </div>
     </div>
   );
-} 
+}

@@ -3,7 +3,10 @@ import { Box, Stack, TextField, Checkbox, FormControlLabel, Link, Button } from 
 
 export default function Login() {
   return (
-    <div className="loginBackground">
+    <div className="mainPage">
+      <div className="loginBackground">
+
+      </div>
       <div className="loginMaster">
         <Stack spacing={2} sx={{width: "100%", alignItems: "center"}}>
           <Box sx={{height:"80px", bgcolor: 'green', width: "100%"}}></Box>
@@ -14,7 +17,7 @@ export default function Login() {
           <Box sx={{height: 30}}></Box>
           <TextField id="outlined-basic" className="input" label="Enter your email here"></TextField>
           <TextField id="outlined-basic" className="input" label="Enter your password here"></TextField>
-          <Stack direction={{xs: "column", md:"row"}} sx={{justifyContent:"space-evenly", width:"100%", alignItems:"center"}}>
+          <Stack direction={{xs: "column", md:"row"}} sx={{justifyContent:"space-around", width:"100%", alignItems:"center"}}>
             <FormControlLabel control={<Checkbox/>} label="Keep me signed in" />
             <Link href="ADD LINK HERE">
               Forgot Password?
@@ -23,7 +26,7 @@ export default function Login() {
           <Box sx={{height: 15}}></Box>
           <Stack direction={{xs: "column", md:"row"}} sx={{justifyContent: "space-evenly", width:"100%", alignItems:"center"}}>
             <Button variant="contained" sx={{bgcolor:"green", height:"80px", width:{xs:"80%", md:"31%"}, marginTop:2}}>Login</Button>
-            <Button variant="contained" sx={{bgcolor:"red", height:"80px", width:{xs:"80%", md:"31%"}, marginTop:2}}>Cancel</Button>
+            <Button variant="contained" sx={{bgcolor:"red", height:"80px", width:{xs:"80%", md:"31%"}, marginTop:2}} href="/">Cancel</Button>
           </Stack>
         </Stack>
       </div>
