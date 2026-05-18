@@ -26,12 +26,12 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  transform: scale(0.9);
+  transform: scale(1);
   transition: transform 0.3s ease;
 }
 
 .recipe-card:hover .recipe-card-image {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 /* Tags */
