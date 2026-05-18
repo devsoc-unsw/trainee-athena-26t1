@@ -17,7 +17,6 @@
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -51,10 +50,16 @@
 }
 
 #root {
-  /* width: 1126px; */
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#content {
+  width: 1400px;
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -63,6 +68,7 @@
 
 body {
   margin: 0;
+  background-color: #fff;
 }
 
 h1,
