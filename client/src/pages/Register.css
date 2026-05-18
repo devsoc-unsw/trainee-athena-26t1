@@ -19,7 +19,6 @@
 .registerMaster {
   padding-bottom: 5%;
   width: 30%;
-  background-color: whitesmoke;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -9,7 +9,6 @@ export default function Login() {
       </div>
       <div className="loginMaster">
         <Stack spacing={2} sx={{width: "100%", alignItems: "center"}}>
-          <Box sx={{height:"80px", bgcolor: 'green', width: "100%"}}></Box>
           <Box className="logo" >
             <Box className="logoMeal" sx={{boxShadow: 6}}>Meal</Box>
             <Box className="logoMatrix" sx={{boxShadow: 6}}>Matrix</Box>

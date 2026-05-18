@@ -10,7 +10,6 @@ export default function Register() {
 
       <div className="registerMaster">
         <Stack spacing={2} sx={{ width: "100%", alignItems: "center" }}>
-          <Box sx={{ height: "80px", bgcolor: 'green', width: "100%" }}></Box>
 
           <Box className="registerLogo">
             <Box className="registerLogoMeal" sx={{ boxShadow: 6 }}>Meal</Box>
