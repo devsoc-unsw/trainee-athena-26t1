@@ -45,3 +45,22 @@ export type Recipe = {
 export type RecipeListResponse = {
   results: Recipe[];
 };
+
+export type MacroRange = {
+  min: number | null;
+  max: number | null;
+};
+ 
+export type Filters = {
+  query: string;
+  vegetarian: boolean;
+  vegan: boolean;
+  glutenFree: boolean;
+  dairyFree: boolean;
+  maxMinutes: number | null;
+  calories: MacroRange;
+  protein: MacroRange;
+  carbs: MacroRange;
+  fat: MacroRange;
+};
+ 
