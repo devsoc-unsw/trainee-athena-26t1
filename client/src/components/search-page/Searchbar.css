@@ -1,0 +1,255 @@
+.searchbar-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 540px;
+  margin: 24px auto;
+}
+
+.searchbar {
+  display: flex;
+  align-items: center;
+  background: #f0f0f0;
+  border-radius: 24px;
+  padding: 8px 16px;
+  gap: 8px;
+}
+
+.searchbar-filter-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.searchbar-filter-dot {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #c0392b;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchbar-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.95rem;
+  color: #333;
+  width: 100%;
+}
+
+.searchbar-input::placeholder {
+  color: #999;
+}
+
+.searchbar-search-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Dropdown */
+.filter-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  z-index: 200;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.filter-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.filter-reset {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: #999;
+  padding: 0;
+}
+
+.filter-reset:hover {
+  color: #c0392b;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-value {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #c0392b;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.filter-toggles {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-toggle {
+  border: 1.5px solid #e0e0e0;
+  background: #fff;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #555;
+  transition: all 0.15s ease;
+}
+
+.filter-toggle:hover {
+  border-color: #c0392b;
+  color: #c0392b;
+}
+
+.filter-toggle.active {
+  background: #c0392b;
+  border-color: #c0392b;
+  color: #fff;
+}
+
+.filter-slider {
+  width: 100%;
+  accent-color: #c0392b;
+  cursor: pointer;
+}
+
+.filter-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: 4px;
+}
+
+.filter-number-input {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  box-sizing: border-box;
+  color: #333;
+}
+
+.filter-number-input:focus {
+  border-color: #c0392b;
+}
+
+/* Macro ranges */
+.macro-range {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.macro-label {
+  font-size: 0.88rem;
+  color: #444;
+  font-weight: 500;
+  width: 70px;
+  flex-shrink: 0;
+}
+
+.macro-inputs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+}
+
+.macro-input {
+  width: 70px;
+  padding: 6px 8px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  outline: none;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.macro-input:focus {
+  border-color: #c0392b;
+}
+
+.macro-unit {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.macro-dash {
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+.filter-apply {
+  width: 100%;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.filter-apply:hover {
+  background: #a93226;
+}
