@@ -1,23 +1,16 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { api } from "../api";
 import type { Recipe, RecipeListResponse } from "../types";
 import Card from "../components/search-page/Card";
+import SearchBar, { DEFAULT_FILTERS } from "../components/search-page/Searchbar";
+import type { Filters } from "../types";
 import "./Home.css";
 
 export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [searchParams] = useSearchParams();
-
-  const query = searchParams.get("query")?.toLowerCase() ?? "";
-  const filterVegetarian = searchParams.get("vegetarian") === "true";
-  const filterVegan = searchParams.get("vegan") === "true";
-  const filterGlutenFree = searchParams.get("glutenFree") === "true";
-  const maxMinutes = searchParams.get("maxMinutes")
-    ? Number(searchParams.get("maxMinutes"))
-    : null;
+  const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -38,16 +31,39 @@ export default function Home() {
   if (error) return <p className="home-status">{error}</p>;
 
   const filteredRecipes = recipes.filter((r) => {
-    if (!r.title?.toLowerCase().includes(query)) return false;
-    if (filterVegetarian && !r.vegetarian) return false;
-    if (filterVegan && !r.vegan) return false;
-    if (filterGlutenFree && !r.glutenFree) return false;
-    if (maxMinutes !== null && r.readyInMinutes > maxMinutes) return false;
+    if (!r.title?.toLowerCase().includes(filters.query.toLowerCase())) return false;
+    if (filters.vegetarian && !r.vegetarian) return false;
+    if (filters.vegan && !r.vegan) return false;
+    if (filters.glutenFree && !r.glutenFree) return false;
+    if (filters.dairyFree && !r.dairyFree) return false;
+    if (filters.maxMinutes !== null && r.readyInMinutes > filters.maxMinutes) return false;
+
+    const nutrients = r.nutrition?.nutrients ?? [];
+
+    const getNutrient = (name: string) =>
+      nutrients.find((n) => n.name.toLowerCase() === name.toLowerCase())?.amount ?? null;
+
+    const calories = getNutrient("Calories");
+    const protein = getNutrient("Protein");
+    const carbs = getNutrient("Carbohydrates");
+    const fat = getNutrient("Fat");
+
+    if (filters.calories.min !== null && (calories === null || calories < filters.calories.min)) return false;
+    if (filters.calories.max !== null && (calories === null || calories > filters.calories.max)) return false;
+    if (filters.protein.min !== null && (protein === null || protein < filters.protein.min)) return false;
+    if (filters.protein.max !== null && (protein === null || protein > filters.protein.max)) return false;
+    if (filters.carbs.min !== null && (carbs === null || carbs < filters.carbs.min)) return false;
+    if (filters.carbs.max !== null && (carbs === null || carbs > filters.carbs.max)) return false;
+    if (filters.fat.min !== null && (fat === null || fat < filters.fat.min)) return false;
+    if (filters.fat.max !== null && (fat === null || fat > filters.fat.max)) return false;
+
     return true;
   });
 
   return (
     <div className="home">
+      <SearchBar filters={filters} onFiltersChange={setFilters} />
+
       {filteredRecipes.length === 0 ? (
         <p className="home-status">No recipes match your filters.</p>
       ) : (
