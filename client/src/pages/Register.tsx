@@ -23,7 +23,7 @@ export default function Register() {
 
           <Stack
             direction={{ xs: "column", md: "row" }}
-            sx={{ justifyContent: "space-around", width: "100%", alignItems: "center" }}
+            sx={{ justifyContent: "space-between", width: "75%", alignItems: "center" }}
           >
             <FormControlLabel control={<Checkbox />} label="Keep me signed in" />
             <Link href="ADD LINK HERE">
@@ -39,7 +39,7 @@ export default function Register() {
           >
             <Button
               variant="contained"
-              sx={{ bgcolor: "green", height: "80px", width: "74%", marginTop: 2 }}
+              sx={{ bgcolor: "green", height: "80px", width: "75%", marginTop: 2 }}
             >
               Register
             </Button>
