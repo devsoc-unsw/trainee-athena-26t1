@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import Item from './models/Item.js';
 import fs from 'fs';
 import Recipe from './models/Recipe.js';
+import { register } from '../scripts/userServices.js';
 
 dotenv.config();
 
@@ -37,6 +38,9 @@ connectDB();
 app.get('/api/health', (req, res) => {
     res.json({ status: 'Server is running' });
 });
+
+// Auth
+app.post('/api/auth/register', register);
 
 // GET all recipes from database
 app.get('/api/v2/recipes', async (req, res) => {
