@@ -1,0 +1,250 @@
+/* ── Page wrapper ── */
+.cr-page {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #f5f5f5;
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ── Red header bar ── */
+.cr-header {
+    background: #c0392b;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.cr-header-title {
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+.cr-header-icons {
+    color: white;
+    font-size: 18px;
+    display: flex;
+    gap: 8px;
+}
+
+/* ── Cover photo area ── */
+.cr-cover {
+    height: 160px;
+    background: #ddd;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cr-cover-placeholder {
+    color: #888;
+    font-size: 14px;
+}
+
+/* ── Main body ── */
+.cr-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ── Editable title ── */
+.cr-title-input {
+    font-size: 22px;
+    font-weight: bold;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    background: transparent;
+    width: 100%;
+    padding: 4px 0;
+    outline: none;
+    color: #222;
+}
+.cr-title-input:focus {
+    border-bottom-color: #c0392b;
+}
+
+/* ── Section label ── */
+.cr-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.cr-label-bold {
+    font-size: 14px;
+    color: #333;
+}
+
+/* ── Generic field wrapper ── */
+.cr-field {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Inputs ── */
+.cr-input {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+.cr-input:focus {
+    border-color: #c0392b;
+}
+.cr-input-sm {
+    width: 90px;
+}
+.cr-input-grow {
+    flex: 1;
+}
+
+/* ── Textarea ── */
+.cr-textarea {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    resize: vertical;
+    font-family: inherit;
+    background: white;
+}
+.cr-textarea:focus {
+    border-color: #c0392b;
+}
+
+/* ── Horizontal row (e.g. cooking time) ── */
+.cr-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ── Tags ── */
+.cr-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.cr-tag {
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: none;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-weight: 500;
+}
+.cr-tag:hover {
+    opacity: 0.85;
+}
+
+/* ── Ingredient / step rows ── */
+.cr-list-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.cr-list-row-top {
+    align-items: flex-start;
+}
+.cr-bullet {
+    color: #c0392b;
+    font-size: 18px;
+    line-height: 1;
+}
+.cr-step-num {
+    color: #c0392b;
+    font-weight: bold;
+    min-width: 20px;
+    padding-top: 8px;
+}
+.cr-remove-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+}
+.cr-remove-btn:hover {
+    color: #c0392b;
+}
+
+/* ── Add buttons ── */
+.cr-add-btn {
+    align-self: flex-start;
+    margin-top: 4px;
+    padding: 6px 14px;
+    background: white;
+    color: #c0392b;
+    border: 1px solid #c0392b;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.cr-add-btn:hover {
+    background: #c0392b;
+    color: white;
+}
+
+/* ── Nutrition table ── */
+.cr-nutrition {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+}
+.cr-nutrition-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.cr-nutrition-label {
+    font-size: 14px;
+    color: #333;
+}
+
+/* ── Save button ── */
+.cr-save-btn {
+    padding: 14px;
+    background: #c0392b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+.cr-save-btn:hover {
+    background: #a93226;
+}
+.cr-save-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* ── Success message ── */
+.cr-success {
+    text-align: center;
+    padding: 14px;
+    background: #27ae60;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+}

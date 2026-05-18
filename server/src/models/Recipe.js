@@ -1,59 +1,49 @@
-import mongoose from "mongoose";
-
-const ingredientSchema = new mongoose.Schema(
-  {
-    id: Number,
-    name: String,
-    amount: Number,
-    unit: String,
-  },
-  { _id: false }
-);
-
-const nutrientSchema = new mongoose.Schema(
-  {
-    name: String,
-    amount: Number,
-    unit: String,
-    percentOfDailyNeeds: Number,
-  },
-  { _id: false }
-);
+import mongoose from 'mongoose';
 
 const recipeSchema = new mongoose.Schema(
-  {
-    image: String,
-    title: {
-      type: String,
-      required: true,
+    {
+        title: {
+            type: String,
+            required: true,
+            default: 'Untitled Recipe',
+        },
+        tags: {
+            type: [String],
+            default: [],
+        },
+        cookingTime: {
+            type: Number,
+            default: 0,
+        },
+        description: {
+            type: String,
+            default: '',
+        },
+        ingredients: {
+            type: [String],
+            default: [],
+        },
+        steps: {
+            type: [String],
+            default: [],
+        },
+        imageUrl: {
+            type: String,
+            default: '',
+        },
+        nutrition: {
+            energy:        { type: Number, default: 0 },
+            totalFat:      { type: Number, default: 0 },
+            saturatedFat:  { type: Number, default: 0 },
+            carbohydrates: { type: Number, default: 0 },
+            sugars:        { type: Number, default: 0 },
+            fibre:         { type: Number, default: 0 },
+            sodium:        { type: Number, default: 0 },
+        },
     },
-    readyInMinutes: Number,
-    servings: Number,
-    sourceUrl: String,
-
-    vegetarian: Boolean,
-    vegan: Boolean,
-    glutenFree: Boolean,
-    dairyFree: Boolean,
-    preparationMinutes: Number,
-    cookingMinutes: Number,
-    healthScore: Number,
-
-    ingredients: [ingredientSchema],
-
-    nutrition: {
-      nutrients: [nutrientSchema],
-    },
-
-    summary: String,
-    cuisines: [String],
-    dishTypes: [String],
-    diets: [String],
-    instructions: String,
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
 
-export default mongoose.model("Recipe", recipeSchema);
+export default mongoose.model('Recipe', recipeSchema);
