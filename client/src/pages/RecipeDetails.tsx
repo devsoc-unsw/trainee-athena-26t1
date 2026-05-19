@@ -11,6 +11,15 @@ import time from "../assets/detailed-recipe-page/time.png";
 // import vegan from "../assets/detailed-recipe-page/vegan.png";
 // import easy from "../assets/detailed-recipe-page/easy.png";
 
+import {
+  FaFire,
+  FaDrumstickBite,
+  FaBreadSlice,
+  FaTint,
+  FaHeart,
+  FaBolt,
+} from "react-icons/fa";
+
 import health from "../assets/detailed-recipe-page/health.png";
 import servings from "../assets/detailed-recipe-page/servings.png";
 
@@ -77,18 +86,52 @@ export default function RecipeDetails() {
             />
           </div>
 
-          <Dropdown title="Key Nutrients">
-            {recipe.nutrition.nutrients.length > 0 ? (
-              <ul>
-                {recipe.nutrition.nutrients.map((nutrient) => (
-                  <li key={nutrient.name}>
-                    {nutrient.name}: {nutrient.amount} {nutrient.unit}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No nutrient information available.</p>
-            )}
+          <Dropdown title="Nutrition Intelligence">
+            <div className="nutrition-header">
+              <h3>Nutrition Breakdown</h3>
+            </div>
+
+            <div className="nutrition-grid">
+              {recipe.nutrition.nutrients.slice(0, 6).map((nutrient) => {
+                let icon = <FaBolt />;
+
+                if (nutrient.name.toLowerCase().includes("calories")) {
+                  icon = <FaFire />;
+                } else if (nutrient.name.toLowerCase().includes("protein")) {
+                  icon = <FaDrumstickBite />;
+                } else if (nutrient.name.toLowerCase().includes("carbo")) {
+                  icon = <FaBreadSlice />;
+                } else if (nutrient.name.toLowerCase().includes("fat")) {
+                  icon = <FaTint />;
+                } else if (nutrient.name.toLowerCase().includes("fiber")) {
+                  icon = <FaHeart />;
+                }
+
+                return (
+                  <div className={`nutrition-card`} key={nutrient.name}>
+                    <div className="nutrition-icon">{icon}</div>
+
+                    <div className="nutrition-info">
+                      <p className="nutrition-name">{nutrient.name}</p>
+
+                      <h2 className="nutrition-value">
+                        {Math.round(nutrient.amount)}
+                        <span>{nutrient.unit}</span>
+                      </h2>
+
+                      <div className="nutrition-bar">
+                        <div
+                          className="nutrition-fill"
+                          style={{
+                            width: `${Math.min(nutrient.amount, 100)}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </Dropdown>
 
           <Dropdown title="Ingredients">
