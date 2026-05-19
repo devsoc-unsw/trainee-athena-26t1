@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import type { Recipe } from "../types";
 import { api } from "../api";
 import "../components/saved-recipes/Filter.css"
+import "../components/saved-recipes/RecipeGrid.css"
 
 
 // all the fields tracked by our filter
@@ -11,29 +12,7 @@ export interface FilterState {
   mealType: string;
   difficulty: string;
 }
-
-export interface Recipe {
-  id: number;
-  title: string;
-  desc: string;
-  time: string;
-  meal: MealType;
-  difficulty: Difficulty;
-  img: string;
-}
-
-const RECIPES: Recipe[] = [
-  { id: 1, title: "Chicken Stew", desc: "Hearty chicken and vegetable stew", time: "30 min", meal: "Dinner", difficulty: "Easy", img: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&q=80" },
-  { id: 2, title: "Pasta Primavera", desc: "Fresh veggies tossed with al dente pasta", time: "20 min", meal: "Lunch", difficulty: "Easy", img: "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400&q=80" },
-  { id: 3, title: "Beef Tacos", desc: "Crispy tacos with seasoned ground beef", time: "25 min", meal: "Dinner", difficulty: "Medium", img: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=80" },
-  { id: 4, title: "Greek Salad", desc: "Classic Mediterranean salad", time: "10 min", meal: "Lunch", difficulty: "Easy", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80" },
-  { id: 5, title: "Mushroom Risotto", desc: "Creamy Arborio with wild mushrooms", time: "45 min", meal: "Dinner", difficulty: "Hard", img: "https://images.unsplash.com/photo-1476124369491-e7addf5db371?w=400&q=80" },
-  { id: 6, title: "Avocado Toast", desc: "Sourdough with smashed avo & chilli flakes", time: "10 min", meal: "Breakfast", difficulty: "Easy", img: "https://images.unsplash.com/photo-1541519227354-08fa5d50c820?w=400&q=80" },
-  { id: 7, title: "Tom Yum Soup", desc: "Spicy Thai broth with prawns", time: "35 min", meal: "Dinner", difficulty: "Medium", img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80" },
-  { id: 8, title: "Banana Pancakes", desc: "Fluffy stacks with maple syrup", time: "20 min", meal: "Breakfast", difficulty: "Easy", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80" },
-  { id: 9, title: "Caesar Salad", desc: "Romaine, croutons & parmesan", time: "15 min", meal: "Lunch", difficulty: "Easy", img: "https://images.unsplash.com/photo-1551248429-40975aa4de74?w=400&q=80" },
-];
-
+const RECIPES: Recipe[] = []
 
 export default function SavedRecipes() {
   // filter tracking
@@ -43,7 +22,7 @@ export default function SavedRecipes() {
 
   const filtered = RECIPES.filter((r) => {
     if (applied.maxTime && parseInt(r.time) > parseInt(applied.maxTime)) return false;
-    if (applied.mealType && r.meal !== applied.mealType) return false;
+    if (applied.mealType.length > 0 && !applied.mealType.includes(r.meal)) return false;
     if (applied.difficulty && r.difficulty !== applied.difficulty) return false;
     return true;
   });
@@ -83,15 +62,25 @@ function Filter({ hasFilters, onApply }: { hasFilters: boolean, onApply: (filter
 
   // filtration types
   const [maxTime, setMaxTime] = useState<number | "" >("");
-  const [mealType, setMealType] = useState<string>("");
-  const [difficulty, setDifficulty] = useState<string>(""); 
-
-
+  const [vegetarian, setVegetarian] = useState(false);
+  const [vegan, setVegan] = useState(false);
+  const [glutenFree, setGlutenFree] = useState(false);
+  const [dairyFree, setDairyFree] = useState(false);
+  const [calories, setCalories] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
+  const [fat, setFat] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
+  const [protein, setProtein] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
+  const [carbs, setCarbs] = useState<{ min: number | null; max: number | null }>({ min: null, max: null });
 
   const handleClear = () => {
     setMaxTime("");
-    setMealType("");
-    setDifficulty("");
+    setVegetarian(false);
+    setVegan(false);
+    setGlutenFree(false);
+    setDairyFree(false);
+    setCalories({ min: null, max: null });
+    setFat({ min: null, max: null });
+    setProtein({ min: null, max: null });
+    setCarbs({ min: null, max: null });
   };
 
 
@@ -140,31 +129,126 @@ function Filter({ hasFilters, onApply }: { hasFilters: boolean, onApply: (filter
                 
               </div>
 
-              <div className="filterBox">
-                <label className="filterLabel">Meal Type</label>
-                <select
-                  value={mealType}
-                  onChange={(e) => setMealType(e.target.value)}
-                  className="filterSelect"
-                >
-                  {MEAL_TYPES.map((m) => (
-                    <option key={m} value={m}>{m || "Any"}</option>
-                  ))}
-                </select>
+              {/* boolean filters */}
+              <div className="checkboxBox">
+                <label className="filterLabel">Vegetarian</label>
+                <input
+                  type="checkbox"
+                  checked={vegetarian}
+                  onChange={(e) => setVegetarian(e.target.checked)}
+                />
               </div>
 
-              
+              <div className="checkboxBox">
+                <label className="filterLabel">Vegan</label>
+                <input
+                  type="checkbox"
+                  checked={vegan}
+                  onChange={(e) => setVegan(e.target.checked)}
+                />
+              </div>
+
+              <div className="checkboxBox">
+                <label className="filterLabel">Dairy Free</label>
+                <input
+                  type="checkbox"
+                  checked={dairyFree}
+                  onChange={(e) => setDairyFree(e.target.checked)}
+                />
+              </div>
+
+              <div className="checkboxBox">
+                <label className="filterLabel">Gluten Free</label>
+                <input
+                  type="checkbox"
+                  checked={glutenFree}
+                  onChange={(e) => setGlutenFree(e.target.checked)}
+                />
+              </div>
+
+              {/* Macro ranges */}
               <div className="filterBox">
-                <label className="filterLabel">Meal Type</label>
-                <select
-                  value={difficulty}
-                  onChange={(e) => setDifficulty(e.target.value)}
-                  className="filterSelect"
-                >
-                  {DIFFICULTIES.map((m) => (
-                    <option key={m} value={m}>{m || "Any"}</option>
-                  ))}
-                </select>
+                <label className="filterLabel">Calories</label>
+                <div className="rangeBox">
+                  <input
+                    type="number"
+                    placeholder="min"
+                    className="rangeInput"
+                    value={calories.min ?? ""}
+                    onChange={(e) => setCalories(prev => ({ ...prev, min: Number(e.target.value) || null }))}
+                  />
+                  <span className="rangeSep">–</span>
+                  <input
+                    type="number"
+                    placeholder="max"
+                    className="rangeInput"
+                    value={calories.max ?? ""}
+                    onChange={(e) => setCalories(prev => ({ ...prev, max: Number(e.target.value) || null }))}
+                  />
+                </div>
+              </div>
+
+              <div className="filterBox">
+                <label className="filterLabel">Fat</label>
+                  <div className="rangeBox">
+                    <input
+                      type="number"
+                      placeholder="min"
+                      className="rangeInput"
+                      value={fat.min ?? ""}
+                      onChange={(e) => setFat(prev => ({ ...prev, min: Number(e.target.value) || null }))}
+                    />
+                    <span className="rangeSep">–</span>
+                    <input
+                      type="number"
+                      placeholder="max"
+                      className="rangeInput"
+                      value={fat.max ?? ""}
+                      onChange={(e) => setFat(prev => ({ ...prev, max: Number(e.target.value) || null }))}
+                    />
+                </div>
+              </div>
+
+              <div className="filterBox">
+                <label className="filterLabel">Protein</label>
+                <div className="rangeBox">
+                    <input
+                      type="number"
+                      placeholder="min"
+                      className="rangeInput"
+                      value={protein.min ?? ""}
+                      onChange={(e) => setProtein(prev => ({ ...prev, min: Number(e.target.value) || null }))}
+                    />
+                    <span className="rangeSep">–</span>
+                    <input
+                      type="number"
+                      placeholder="max"
+                      className="rangeInput"
+                      value={protein.max ?? ""}
+                      onChange={(e) => setProtein(prev => ({ ...prev, max: Number(e.target.value) || null }))}
+                    />
+                </div>
+              </div>
+
+              <div className="filterBox">
+                <label className="filterLabel">Carbohydrates</label>
+                <div className="rangeBox">
+                    <input
+                      type="number"
+                      placeholder="min"
+                      className="rangeInput"
+                      value={carbs.min ?? ""}
+                      onChange={(e) => setCarbs(prev => ({ ...prev, min: Number(e.target.value) || null }))}
+                    />
+                    <span className="rangeSep">–</span>
+                    <input
+                      type="number"
+                      placeholder="max"
+                      className="rangeInput"
+                      value={carbs.max ?? ""}
+                      onChange={(e) => setCarbs(prev => ({ ...prev, max: Number(e.target.value) || null }))}
+                    />
+                </div>
               </div>
 
               <button className="applyBtn" onClick={handleApply}>
@@ -176,5 +260,22 @@ function Filter({ hasFilters, onApply }: { hasFilters: boolean, onApply: (filter
     </div>
 
 
+  );
+}
+
+function RecipeCard() {
+  return (<div>
+
+
+  </div>);
+}
+
+function RecipeGrid({ recipes }: RecipeGridProps) {
+  return (
+    <div className="recipeGrid">
+      {recipes.map((r) => (
+        <RecipeCard key={r.id} recipe={r} />
+      ))}
+    </div>
   );
 }
