@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import Item from './models/Item.js';
 import fs from 'fs';
 import Recipe from './models/Recipe.js';
-import { register, login, authenticate } from '../scripts/userServices.js';
+import { register, login, authenticate, changePassword } from '../scripts/userServices.js';
 
 dotenv.config();
 
@@ -43,6 +43,8 @@ app.get('/api/health', (req, res) => {
 app.post('/api/auth/register', register);
 
 app.post('/api/auth/login', login);
+
+app.post('/api/auth/change-password', authenticate, changePassword);
 
 // GET all recipes from database
 app.get('/api/v2/recipes', async (req, res) => {

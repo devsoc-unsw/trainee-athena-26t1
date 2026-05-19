@@ -11,10 +11,14 @@ const {
     JWT_REFRESH_SECRET = "dev"
 } = process.env;
 
-export async function createUser(email, password) {
+function validatePassword(password) {
 	if (password.length < 8 || !(/[a-z]/.test(password)) || !(/[A-Z]/.test(password))) {
 		throw new Error("Password Invalid");
 	}
+}
+
+export async function createUser(email, password) {
+	validatePassword(password);
 
 	const hashedPassword = await argon2.hash(password);
 	return {
@@ -88,6 +92,38 @@ export function verifyAccessToken(token) {
 
 export function generateAccessToken(userId) {
 	return jwt.sign({ sub: userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: "7d" });
+}
+
+export async function changePassword(req, res) {
+	try {
+		const { currentPassword, newPassword } = req.body;
+
+		if (!currentPassword || !newPassword) {
+			return res.status(400).json({ error: "Current and new password are required" });
+		}
+
+		const user = await User.findOne({ userId: req.userId });
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
+
+		const isCurrentValid = await argon2.verify(user.password, currentPassword);
+		if (!isCurrentValid) {
+			return res.status(401).json({ error: "Current password is incorrect" });
+		}
+
+		validatePassword(newPassword);
+
+		user.password = await argon2.hash(newPassword);
+		await user.save();
+
+		return res.status(200).json({ message: "Password updated successfully" });
+	} catch (error) {
+		if (error.message === "Password Invalid") {
+			return res.status(400).json({ error: error.message });
+		}
+		return res.status(500).json({ error: error.message });
+	}
 }
 
 export function authenticate(req, res, next) {
