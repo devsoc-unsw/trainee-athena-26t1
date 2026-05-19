@@ -7,7 +7,13 @@ interface Props {
   defaultOpen?: boolean;
 }
 
-export default function Dropdown({ title, children, defaultOpen = false }: Props) {
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+
+export default function Dropdown({
+  title,
+  children,
+  defaultOpen = false,
+}: Props) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
@@ -19,14 +25,10 @@ export default function Dropdown({ title, children, defaultOpen = false }: Props
       >
         <span className="dropdown-title">{title}</span>
         <span className="dropdown-chevron" aria-hidden="true">
-          {isOpen ? "▲" : "▼"}
+          {isOpen ? <FiChevronUp /> : <FiChevronDown />}
         </span>
       </button>
-      {isOpen && (
-        <div className="dropdown-body">
-          {children}
-        </div>
-      )}
+      {isOpen && <div className="dropdown-body">{children}</div>}
     </div>
   );
 }

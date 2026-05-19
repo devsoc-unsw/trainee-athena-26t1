@@ -21,12 +21,19 @@
 }
 
 .dropdown-chevron {
-  font-size: 12px;
-  color: #c0392b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 1.1rem;
+  color: #666;
+
+  transition: transform 0.2s ease;
 }
 
 .dropdown-body {
   padding-bottom: 14px;
+  padding-top: 20px;
   font-size: 14px;
   color: #555;
   line-height: 1.6;

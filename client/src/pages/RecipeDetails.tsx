@@ -150,7 +150,10 @@ export default function RecipeDetails() {
 
           <Dropdown title="Instructions" defaultOpen>
             {recipe.instructions ? (
-              <div dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
+              <div
+                className="instructions-body"
+                dangerouslySetInnerHTML={{ __html: recipe.instructions }}
+              />
             ) : (
               <p>No instructions available.</p>
             )}

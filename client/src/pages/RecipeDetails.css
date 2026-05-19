@@ -100,7 +100,6 @@
 }
 
 /* Nutrition Section */
-/* Nutrition Section */
 .nutrition-header {
   margin-bottom: 16px;
 }
@@ -176,4 +175,11 @@
   height: 100%;
   border-radius: inherit;
   background: #c0392b;
+}
+
+/* Instructions */
+.instructions-body {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: #444;
 }
