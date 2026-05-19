@@ -2,8 +2,14 @@ import argon2 from "argon2";
 import dotenv from "dotenv";
 import User from "../src/models/Auth.js";
 import { randomUUID } from "crypto";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
+
+const {
+    JWT_ACCESS_SECRET = "dev",
+    JWT_REFRESH_SECRET = "dev"
+} = process.env;
 
 export async function createUser(email, password) {
 	if (password.length < 8 || !(/[a-z]/.test(password)) || !(/[A-Z]/.test(password))) {
@@ -47,5 +53,57 @@ export async function register(req, res) {
 			return res.status(409).json({ error: "Email already registered" });
 		}
 		return res.status(500).json({ error: error.message });
+	}
+}
+
+export async function login(req, res) {
+	try {
+		const { email, password } = req.body;
+		if (!email || !password) {
+			return res.status(400).json({ error: "Email and password are required" });
+		}
+
+		const user = await User.findOne({ email: email.trim().toLowerCase() });
+		if (!user) {
+			return res.status(401).json({ error: "Invalid email or password" });
+		}
+		
+		const isPasswordValid = await argon2.verify(user.password, password);
+
+		if (!isPasswordValid) {
+			return res.status(401).json({ error: "Invalid email or password" });
+		}
+
+		const token = generateAccessToken(user.userId);
+
+		return res.status(200).json({ userId: user.userId, email: user.email, accessToken: token });
+	} catch (error) {
+		return res.status(500).json({ error: error.message });
+	}
+}
+
+export function verifyAccessToken(token) {
+	return jwt.verify(token, process.env.JWT_ACCESS_SECRET);
+}
+
+export function generateAccessToken(userId) {
+	return jwt.sign({ sub: userId }, process.env.JWT_ACCESS_SECRET, { expiresIn: "7d" });
+}
+
+export function authenticate(req, res, next) {
+	const authHeader = req.headers.authorization;
+
+	if (!authHeader?.startsWith("Bearer ")) {
+		return res.status(401).json({ error: "Authentication required" });
+	}
+
+	const token = authHeader.slice("Bearer ".length);
+
+	try {
+		const payload = verifyAccessToken(token);
+		req.userId = payload.sub;
+		next();
+	} catch {
+		return res.status(401).json({ error: "Invalid or expired token" });
 	}
 }
