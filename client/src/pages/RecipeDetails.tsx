@@ -3,6 +3,9 @@ import { useParams } from "react-router-dom";
 import type { Recipe } from "../types";
 import { api } from "../api";
 
+
+import Dropdown from "../components/detailed-recipe-page/Dropdown.tsx";
+
 export default function RecipeDetails() {
   const { recipeId } = useParams();
 
