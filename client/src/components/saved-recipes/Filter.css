@@ -179,3 +179,10 @@
   align-self: flex-end;
   margin-left: auto;
 }
+
+.resultsInfo {
+  padding: 0 20px;     
+  margin: 8px 0 16px;
+  font-size: 14px;
+  color: black;
+}
