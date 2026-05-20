@@ -1,22 +1,33 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import type { Recipe, RecipeListResponse } from "../types";
-import Card from "../components/search-page/Card";
+import Card from "../components/search-page/CardSaving";
 import SearchBar, { DEFAULT_FILTERS } from "../components/search-page/Searchbar";
 import type { Filters } from "../types";
 import "./Home.css";
+import { getAccessToken } from "../auth";
+import LoginPopup from "../components/search-page/LoginPopup";
 
 export default function Home() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [savedRecipeIds, setSavedRecipeIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   useEffect(() => {
     async function fetchRecipes() {
       try {
         const response = await api.get<RecipeListResponse>("/api/recipes");
         setRecipes(response.data.results);
+
+        const token = getAccessToken();
+
+        if (token) {
+          const savedResponse = await api.get("/api/saved-recipes");
+          setSavedRecipeIds(savedResponse.data.savedRecipeIds ?? []);
+        }
       } catch (err) {
         setError("Failed to load recipes.");
       } finally {
@@ -26,6 +37,27 @@ export default function Home() {
 
     fetchRecipes();
   }, []);
+
+  const handleSaveRecipeToggle = async (recipeId: number, isCurrSaved: boolean) => {
+    const token = getAccessToken();
+
+    if (!token) {
+      setShowLoginPopup(true);
+      return;
+    }
+
+    try {
+      if (isCurrSaved) {
+        const res = await api.delete(`/api/recipes/${recipeId}/save`);
+        setSavedRecipeIds(res.data.savedRecipeIds ?? []);
+      } else {
+        const res = await api.post(`/api/recipes/${recipeId}/save`);
+        setSavedRecipeIds(res.data.savedRecipeIds ?? []);
+      }
+    } catch (error) {
+      setShowLoginPopup(true);
+    }
+  };
 
   if (loading) return <p className="home-status">Loading...</p>;
   if (error) return <p className="home-status">{error}</p>;
@@ -69,10 +101,17 @@ export default function Home() {
       ) : (
         <div className="recipe-grid">
           {filteredRecipes.map((recipe) => (
-            <Card key={recipe.id} recipe={recipe} />
+            <Card 
+              key={recipe.id} 
+              recipe={recipe}
+              isSaved={savedRecipeIds.includes(recipe.id)}
+              onToggleSave={handleSaveRecipeToggle} 
+            />
           ))}
         </div>
       )}
+
+      {showLoginPopup && <LoginPopup setShowLoginPopup={setShowLoginPopup} />}
     </div>
   );
 }
