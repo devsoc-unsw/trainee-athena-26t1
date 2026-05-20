@@ -244,6 +244,88 @@ app.get("/api/recipes/:id", (req, res) => {
 });
 
 // ============================================
+// Saving logic
+// ============================================
+
+// Saves new recipe
+app.post("/api/recipes/:id/save", authenticate, async (req, res) => {
+  try {
+    const recipeId = Number(req.params.id);
+
+    const recipe = recipes.find((recipe) => recipe.id === recipeId);
+
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
+    }
+
+    const user = await User.findOneAndUpdate(
+      { userId: req.userId },
+      { $addToSet: { savedRecipes: recipeId } },
+      { new: true },
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Recipe saved",
+      savedRecipeIds: user.savedRecipes,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Unsaves a recipe
+app.delete("/api/recipes/:id/save", authenticate, async (req, res) => {
+  try {
+    const recipeId = Number(req.params.id);
+
+    const user = await User.findOneAndUpdate(
+      { userId: req.userId },
+      { $pull: { savedRecipes: recipeId } },
+      { new: true },
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      message: "Recipe unsaved",
+      savedRecipeIds: user.savedRecipes,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Given a user's ID, get their saved recipes
+app.get("/api/saved-recipes", authenticate, async (req, res) => {
+  try {
+    const user = await User.findOne({ userId: req.userId });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const savedRecipeIds = new Set(user.savedRecipes);
+
+    const savedRecipes = recipes
+      .filter((recipe) => savedRecipeIds.has(recipe.id))
+      .map(formatRecipe);
+
+    res.json({
+      recipes: savedRecipes,
+      savedRecipeIds: user.savedRecipes,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ============================================
 // Start Server
 // ============================================
 app.listen(PORT, () => {
