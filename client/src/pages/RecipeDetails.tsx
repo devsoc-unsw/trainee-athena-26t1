@@ -162,7 +162,11 @@ export default function RecipeDetails() {
           <Dropdown title="Instructions" defaultOpen>
             {recipe.instructions ? (
               <div
-                className="instructions-body"
+                className={`instructions-body ${
+                  recipe.instructions.includes("<ol")
+                    ? "instructions-numbered"
+                    : "instructions-plain"
+                }`}
                 dangerouslySetInnerHTML={{ __html: recipe.instructions }}
               />
             ) : (

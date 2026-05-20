@@ -1,5 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 
+.recipe-details a {
+  color: #c0392b;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.recipe-details a:hover {
+  color: #c0392b;
+  text-decoration: underline;
+}
+
+.recipe-details a:visited {
+  color: #660505;
+}
 /* Top Section */
 
 .recipe-details {
@@ -35,7 +50,7 @@
 .title-and-rating {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
   padding: 36px 0 20px;
 }
@@ -50,8 +65,8 @@
 }
 
 .recipe-rating {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   opacity: 0.9;
 }
 
@@ -256,6 +271,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: #1b0404;
+  text-transform: capitalize;
 }
 
 .ingredient-amount {
@@ -264,4 +280,127 @@
   color: #360606;
   /* padding: 6px 8px; */
   white-space: nowrap;
+  text-transform: capitalize;
+}
+
+/* Instructions */
+
+.instructions-body {
+  padding-top: 8px;
+  color: #374151;
+  line-height: 1.9;
+  font-size: 1rem;
+}
+
+/* Paragraphs */
+.instructions-body p {
+  margin-bottom: 18px;
+}
+
+/* Headings inside recipe instructions */
+.instructions-body h1,
+.instructions-body h2,
+.instructions-body h3,
+.instructions-body h4 {
+  color: #111827;
+  margin-top: 24px;
+  margin-bottom: 14px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+/* Ordered list (numbered instructions) */
+.instructions-numbered ol {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.instructions-numbered li {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #ececec;
+  border-radius: 18px;
+  padding: 18px 20px 18px 72px;
+
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.03),
+    0 10px 24px rgba(0, 0, 0, 0.03);
+
+  transition: all 0.22s ease;
+}
+
+.instructions-numbered li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+/* Step number circle */
+.instructions-numbered li::before {
+  counter-increment: step;
+  content: counter(step);
+
+  position: absolute;
+  left: 20px;
+  top: 18px;
+
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+
+  background: #660505;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+/* Bullet lists inside instructions */
+.instructions-body ul {
+  padding-left: 20px;
+  margin: 12px 0 18px;
+}
+
+.instructions-body ul li {
+  margin-bottom: 8px;
+}
+
+/* Strong text */
+.instructions-body strong,
+.instructions-body b {
+  color: #111827;
+  font-weight: 700;
+}
+
+/* Links */
+.instructions-body a {
+  color: #660505;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.instructions-body a:hover {
+  text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .instructions-numbered li {
+    padding: 16px 16px 16px 60px;
+  }
+
+  .instructions-numbered li::before {
+    width: 32px;
+    height: 32px;
+    left: 16px;
+    font-size: 0.85rem;
+  }
 }
