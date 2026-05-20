@@ -19,7 +19,7 @@
   border-radius: 12px;
   border-color: transparent;
   padding: 8px 16px;
-  color: black;
+  color: #333;
   font-size: 20px;
 
   cursor: pointer;
@@ -144,7 +144,7 @@
   padding: 0 10px;
   gap: 4px;
   box-sizing: border-box;
-  width: 100%;
+  width: 110%;
 }
 
 .rangeInput {
@@ -156,19 +156,6 @@
   flex: 1;
   min-width: 40px;
   width: 0;
-}
-
-.rangeBox {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background: white;
-  border-radius: 8px;
-  height: 38px;
-  padding: 0 10px;
-  gap: 4px;
-  box-sizing: border-box;
-  width: 100%;
 }
 
 .applyBtn {

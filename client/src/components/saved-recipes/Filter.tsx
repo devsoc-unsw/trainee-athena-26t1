@@ -61,6 +61,15 @@ export default function Filter({
     onApply(EMPTY_FILTERS);
   };
 
+    
+  // prevent non negative
+  const clampNonNeg = (raw: string): number | null => {
+    if (raw === "") return null;
+    const n = Number(raw);
+    if (Number.isNaN(n)) return null;
+    return n < 0 ? 0 : n;
+  };
+
 
   
   const handleApply = () => {
@@ -127,20 +136,38 @@ export default function Filter({
                 <label className="filterLabel">Calories</label>
                 <div className="rangeBox">
                   <input
-                    type="number"
-                    placeholder="min"
-                    className="rangeInput"
-                    value={calories.min ?? ""}
-                    onChange={(e) => setCalories(prev => ({ ...prev, min: Number(e.target.value) || null }))}
-                  />
-                  <span className="rangeSep">–</span>
-                  <input
-                    type="number"
-                    placeholder="max"
-                    className="rangeInput"
-                    value={calories.max ?? ""}
-                    onChange={(e) => setCalories(prev => ({ ...prev, max: Number(e.target.value) || null }))}
-                  />
+                  type="number"
+                  min={0}
+                  placeholder="min"
+                  className="rangeInput"
+                  value={calories.min ?? ""}
+                  onChange={(e) =>
+                    setCalories((prev) => {
+                      const min = clampNonNeg(e.target.value);
+                      // if new min exceeds existing max, push max up to match
+                      const max = prev.max !== null && min !== null && min > prev.max ? min : prev.max;
+                      return { min, max };
+                    })
+                  }
+                />
+                <span className="rangeSep">–</span>
+                <input
+                  type="number"
+                  min={0}
+                  placeholder="max"
+                  className="rangeInput"
+                  value={calories.max ?? ""}
+                  onChange={(e) =>
+                    setCalories((prev) => {
+                      const max = clampNonNeg(e.target.value);
+                      // don't allow max below existing min
+                      if (max !== null && prev.min !== null && max < prev.min) {
+                        return { ...prev, max: prev.min };
+                      }
+                      return { ...prev, max };
+                    })
+                  }
+                />
                 </div>
               </div>
 
@@ -148,20 +175,38 @@ export default function Filter({
                 <label className="filterLabel">Fat</label>
                   <div className="rangeBox">
                     <input
-                      type="number"
-                      placeholder="min"
-                      className="rangeInput"
-                      value={fat.min ?? ""}
-                      onChange={(e) => setFat(prev => ({ ...prev, min: Number(e.target.value) || null }))}
-                    />
-                    <span className="rangeSep">–</span>
-                    <input
-                      type="number"
-                      placeholder="max"
-                      className="rangeInput"
-                      value={fat.max ?? ""}
-                      onChange={(e) => setFat(prev => ({ ...prev, max: Number(e.target.value) || null }))}
-                    />
+                    type="number"
+                    min={0}
+                    placeholder="min"
+                    className="rangeInput"
+                    value={fat.min ?? ""}
+                    onChange={(e) =>
+                      setFat((prev) => {
+                        const min = clampNonNeg(e.target.value);
+                        // if new min exceeds existing max, push max up to match
+                        const max = prev.max !== null && min !== null && min > prev.max ? min : prev.max;
+                        return { min, max };
+                      })
+                    }
+                  />
+                  <span className="rangeSep">–</span>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="max"
+                    className="rangeInput"
+                    value={fat.max ?? ""}
+                    onChange={(e) =>
+                      setFat((prev) => {
+                        const max = clampNonNeg(e.target.value);
+                        // don't allow max below existing min
+                        if (max !== null && prev.min !== null && max < prev.min) {
+                          return { ...prev, max: prev.min };
+                        }
+                        return { ...prev, max };
+                      })
+                    }
+                  />
                 </div>
               </div>
 
@@ -169,20 +214,38 @@ export default function Filter({
                 <label className="filterLabel">Protein</label>
                 <div className="rangeBox">
                     <input
-                      type="number"
-                      placeholder="min"
-                      className="rangeInput"
-                      value={protein.min ?? ""}
-                      onChange={(e) => setProtein(prev => ({ ...prev, min: Number(e.target.value) || null }))}
-                    />
-                    <span className="rangeSep">–</span>
-                    <input
-                      type="number"
-                      placeholder="max"
-                      className="rangeInput"
-                      value={protein.max ?? ""}
-                      onChange={(e) => setProtein(prev => ({ ...prev, max: Number(e.target.value) || null }))}
-                    />
+                    type="number"
+                    min={0}
+                    placeholder="min"
+                    className="rangeInput"
+                    value={protein.min ?? ""}
+                    onChange={(e) =>
+                      setProtein((prev) => {
+                        const min = clampNonNeg(e.target.value);
+                        // if new min exceeds existing max, push max up to match
+                        const max = prev.max !== null && min !== null && min > prev.max ? min : prev.max;
+                        return { min, max };
+                      })
+                    }
+                  />
+                  <span className="rangeSep">–</span>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="max"
+                    className="rangeInput"
+                    value={protein.max ?? ""}
+                    onChange={(e) =>
+                      setProtein((prev) => {
+                        const max = clampNonNeg(e.target.value);
+                        // don't allow max below existing min
+                        if (max !== null && prev.min !== null && max < prev.min) {
+                          return { ...prev, max: prev.min };
+                        }
+                        return { ...prev, max };
+                      })
+                    }
+                  />
                 </div>
               </div>
 
@@ -190,20 +253,38 @@ export default function Filter({
                 <label className="filterLabel">Carbohydrates</label>
                 <div className="rangeBox">
                     <input
-                      type="number"
-                      placeholder="min"
-                      className="rangeInput"
-                      value={carbs.min ?? ""}
-                      onChange={(e) => setCarbs(prev => ({ ...prev, min: Number(e.target.value) || null }))}
-                    />
-                    <span className="rangeSep">–</span>
-                    <input
-                      type="number"
-                      placeholder="max"
-                      className="rangeInput"
-                      value={carbs.max ?? ""}
-                      onChange={(e) => setCarbs(prev => ({ ...prev, max: Number(e.target.value) || null }))}
-                    />
+                    type="number"
+                    min={0}
+                    placeholder="min"
+                    className="rangeInput"
+                    value={carbs.min ?? ""}
+                    onChange={(e) =>
+                      setCarbs((prev) => {
+                        const min = clampNonNeg(e.target.value);
+                        // if new min exceeds existing max, push max up to match
+                        const max = prev.max !== null && min !== null && min > prev.max ? min : prev.max;
+                        return { min, max };
+                      })
+                    }
+                  />
+                  <span className="rangeSep">–</span>
+                  <input
+                    type="number"
+                    min={0}
+                    placeholder="max"
+                    className="rangeInput"
+                    value={carbs.max ?? ""}
+                    onChange={(e) =>
+                      setCarbs((prev) => {
+                        const max = clampNonNeg(e.target.value);
+                        // don't allow max below existing min
+                        if (max !== null && prev.min !== null && max < prev.min) {
+                          return { ...prev, max: prev.min };
+                        }
+                        return { ...prev, max };
+                      })
+                    }
+                  />
                 </div>
               </div>
 
