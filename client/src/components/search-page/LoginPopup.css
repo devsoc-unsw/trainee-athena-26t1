@@ -1,0 +1,57 @@
+/* Login popup for trying to save when not logged in */
+
+.login-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1000;
+}
+
+.login-popup {
+  background: white;
+  color: #000000;
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.login-popup h2 {
+  margin: 0 0 10px;
+  color: #000000;
+}
+
+.login-popup p {
+  margin: 0 0 20px;
+}
+
+.login-popup-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.login-popup-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.login-popup-actions button:first-child {
+  background: rgb(191, 58, 43);
+  color: white;
+}
+
+.secondary-button {
+  background: #f5f2e9;
+  color: #17251b;
+}
