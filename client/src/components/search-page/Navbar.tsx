@@ -13,7 +13,7 @@ export default function Navbar() {
         <Link to="/saved-recipes" className="navbar-icon-btn" aria-label="Saved recipes">
           <i className="bi bi-bookmark" style={{ fontSize: '23px', color: '#fff' }} />
         </Link>
-        <Link to="/profile" className="navbar-icon-btn" aria-label="Profile">
+        <Link to="/login" className="navbar-icon-btn" aria-label="Login">
           <i className="bi bi-person" style={{ fontSize: '26px', color: '#fff' }} />
         </Link>
       </div>
