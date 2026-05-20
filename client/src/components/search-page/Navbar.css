@@ -49,3 +49,12 @@
   align-items: center;
   color: #fff;
 }
+
+.navbar-profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  flex-shrink: 0;
+  /* padding-right: 15px; */
+  /* margin-top: -2px; */
+}
