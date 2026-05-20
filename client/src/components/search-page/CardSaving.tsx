@@ -5,11 +5,10 @@ import "./Card.css";
 type Props = {
   recipe: Recipe;
   isSaved: boolean;
-  isLoggedIn: boolean;
   onToggleSave: (recipeId: number, isCurrSaved: boolean) => void;
 };
 
-export default function Card({ recipe, isSaved, isLoggedIn, onToggleSave }: Props) {
+export default function Card({ recipe, isSaved, onToggleSave }: Props) {
   const navigate = useNavigate();
 
   // Pick up to 2 tags to show on the card image

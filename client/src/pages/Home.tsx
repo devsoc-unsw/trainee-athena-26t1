@@ -105,7 +105,6 @@ export default function Home() {
               key={recipe.id} 
               recipe={recipe}
               isSaved={savedRecipeIds.includes(recipe.id)}
-              isLoggedIn={Boolean(getAccessToken())}
               onToggleSave={handleSaveRecipeToggle} 
             />
           ))}
