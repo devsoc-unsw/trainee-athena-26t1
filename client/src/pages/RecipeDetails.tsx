@@ -88,7 +88,7 @@ export default function RecipeDetails() {
 
           <Dropdown title="Nutrition Intelligence">
             <div className="nutrition-header">
-              <h3>Nutrition Breakdown</h3>
+              <h3>Macros Breakdown</h3>
             </div>
 
             <div className="nutrition-grid">
