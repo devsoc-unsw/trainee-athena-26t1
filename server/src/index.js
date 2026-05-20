@@ -11,9 +11,11 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
+// MongoDB Connection
 async function connectDB() {
     try {
         const conn = await mongoose.connect(process.env.MONGODB_URI);
@@ -26,10 +28,17 @@ async function connectDB() {
 
 connectDB();
 
+// ============================================
+// ROUTES - These handle requests from frontend
+// (replace test routes when done, remove 'v2')
+// ============================================
+
+// Health Check - Test if server is running
 app.get('/api/health', (req, res) => {
     res.json({ status: 'Server is running' });
 });
 
+// GET all recipes from database
 app.get('/api/v2/recipes', async (req, res) => {
     try {
         const recipes = await Recipe.find();
@@ -39,6 +48,7 @@ app.get('/api/v2/recipes', async (req, res) => {
     }
 });
 
+// GET single recipe by ID
 app.get('/api/v2/recipes/:id', async (req, res) => {
     try {
         const recipe = await Recipe.findById(req.params.id);
@@ -51,6 +61,7 @@ app.get('/api/v2/recipes/:id', async (req, res) => {
     }
 });
 
+// CREATE a new recipe
 app.post('/api/create-recipe', async (req, res) => {
     try {
         const newRecipe = await Recipe.create(req.body);
@@ -60,6 +71,12 @@ app.post('/api/create-recipe', async (req, res) => {
     }
 });
 
+// Unused routes (implement frontend first)
+
+// TODO: For these, check if the user actually owns this recipe
+// and is authenticated to modify them
+
+// UPDATE an item
 app.put('/api/items/:id', async (req, res) => {
     try {
         const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -84,6 +101,12 @@ app.delete('/api/items/:id', async (req, res) => {
     }
 });
 
+// ============================================
+// TESTING ROUTES - These return the dummy data
+// for easier frontend implementation for now
+// ============================================
+
+// We're not using recipe-nutrients-sample.json for now
 const recipeData = JSON.parse(
     fs.readFileSync("recipe-info-sample.json", "utf-8")
 );
@@ -135,6 +158,7 @@ const getKeyNutrients = (recipe) => {
     }).filter(Boolean);
 };
 
+// Formats the recipe result with the desired attributes
 const formatRecipe = (recipe) => {
     return {
         id: recipe.id,
@@ -144,11 +168,13 @@ const formatRecipe = (recipe) => {
         servings: recipe.servings,
         sourceUrl: recipe.sourceUrl,
 
+        // Dietaries
         vegetarian: recipe.vegetarian,
         vegan: recipe.vegan,
         glutenFree: recipe.glutenFree,
         dairyFree: recipe.dairyFree,
 
+        // Misc info
         preparationMinutes: recipe.preparationMinutes,
         cookingMinutes: recipe.cookingMinutes,
         healthScore: recipe.healthScore,
@@ -172,10 +198,12 @@ const formatRecipe = (recipe) => {
     };
 };
 
+// GET /api/recipes
 app.get('/api/recipes', (req, res) => {
     res.json({ results: recipes.map(formatRecipe) });
 });
 
+// Search for an item with query
 app.get('/api/recipes/search', (req, res) => {
     const query = req.query.query?.toLowerCase() || "";
     const filteredRecipes = recipes.filter((recipe) => {
@@ -185,6 +213,7 @@ app.get('/api/recipes/search', (req, res) => {
     res.json({ results: filteredRecipes.map(formatRecipe) });
 });
 
+// GET /api/recipes/:id
 app.get('/api/recipes/:id', (req, res) => {
     const recipeId = Number(req.params.id);
 
@@ -197,6 +226,9 @@ app.get('/api/recipes/:id', (req, res) => {
     res.json(formatRecipe(recipe));
 });
 
+// ============================================
+// Start Server
+// ============================================
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

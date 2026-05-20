@@ -1,87 +1,105 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
+import { Ingredient, Nutrient } from '../types'
 import './CreateRecipe.css'
 
-type NutritionFields = {
-    energy: string
-    totalFat: string
-    saturatedFat: string
-    carbohydrates: string
-    sugars: string
-    fibre: string
-    sodium: string
-}
-
-const AVAILABLE_TAGS = [
-    'Vegetarian', 'Vegan', 'Dessert', 'Lunch',
-    'Dinner', 'Healthy', 'Hot', 'Cold', 'Breakfast', 'Snack',
+const DISH_TYPES = [
+    'Main Course', 'Side Dish', 'Dessert', 'Appetizer',
+    'Salad', 'Bread', 'Breakfast', 'Soup', 'Snack', 'Beverage',
 ]
 
-const TAG_COLOURS: Record<string, string> = {
-    Vegetarian:  '#27ae60',
-    Vegan:       '#2ecc71',
-    Dessert:     '#e67e22',
-    Lunch:       '#f39c12',
-    Dinner:      '#c0392b',
-    Healthy:     '#16a085',
-    Hot:         '#e74c3c',
-    Cold:        '#2980b9',
-    Breakfast:   '#8e44ad',
-    Snack:       '#d35400',
+const DISH_TYPE_COLOURS: Record<string, string> = {
+    'Main Course': '#c0392b',
+    'Side Dish':   '#e67e22',
+    'Dessert':     '#8e44ad',
+    'Appetizer':   '#2980b9',
+    'Salad':       '#27ae60',
+    'Bread':       '#d35400',
+    'Breakfast':   '#16a085',
+    'Soup':        '#f39c12',
+    'Snack':       '#e74c3c',
+    'Beverage':    '#2ecc71',
 }
+
+const DEFAULT_NUTRIENTS: Nutrient[] = [
+    { name: 'Calories',      amount: 0, unit: 'kcal' },
+    { name: 'Protein',       amount: 0, unit: 'g'    },
+    { name: 'Fat',           amount: 0, unit: 'g'    },
+    { name: 'Saturated Fat', amount: 0, unit: 'g'    },
+    { name: 'Carbohydrates', amount: 0, unit: 'g'    },
+    { name: 'Sugar',         amount: 0, unit: 'g'    },
+    { name: 'Fiber',         amount: 0, unit: 'g'    },
+    { name: 'Sodium',        amount: 0, unit: 'mg'   },
+]
+
+type IngredientInput = Omit<Ingredient, 'id'>
 
 export default function CreateRecipe() {
     const navigate = useNavigate()
 
     const [title, setTitle]               = useState('Untitled Recipe')
-    const [selectedTags, setSelectedTags] = useState<string[]>([])
-    const [cookingTime, setCookingTime]   = useState('')
-    const [description, setDescription]   = useState('')
-    const [ingredients, setIngredients]   = useState<string[]>([''])
-    const [steps, setSteps]               = useState<string[]>([''])
-    const [imageUrl, setImageUrl]         = useState('')
-    const [nutrition, setNutrition]       = useState<NutritionFields>({
-        energy: '', totalFat: '', saturatedFat: '',
-        carbohydrates: '', sugars: '', fibre: '', sodium: '',
-    })
-    const [saving, setSaving] = useState(false)
-    const [saved, setSaved]   = useState(false)
+    const [image, setImage]               = useState('')
+    const [sourceUrl, setSourceUrl]       = useState('')
+    const [summary, setSummary]           = useState('')
+    const [instructions, setInstructions] = useState('')
+    const [readyInMinutes, setReadyInMinutes] = useState('')
+    const [servings, setServings]         = useState('')
+    const [healthScore, setHealthScore]   = useState('')
+    const [dishTypes, setDishTypes]       = useState<string[]>([])
+    const [cuisines, setCuisines]         = useState<string[]>([''])
+    const [diets, setDiets]               = useState<string[]>([''])
+    const [vegetarian, setVegetarian]     = useState(false)
+    const [vegan, setVegan]               = useState(false)
+    const [glutenFree, setGlutenFree]     = useState(false)
+    const [dairyFree, setDairyFree]       = useState(false)
+    const [ingredients, setIngredients]   = useState<IngredientInput[]>([{ name: '', amount: 0, unit: '' }])
+    const [nutrients, setNutrients]       = useState<Nutrient[]>(DEFAULT_NUTRIENTS)
+    const [saving, setSaving]             = useState(false)
+    const [saved, setSaved]               = useState(false)
 
-    function toggleTag(tag: string) {
-        setSelectedTags(prev =>
-            prev.includes(tag)
-                ? prev.filter(t => t !== tag)
-                : [...prev, tag]
+    function toggleDishType(type: string) {
+        setDishTypes(prev =>
+            prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
         )
     }
 
     function addIngredient() {
-        setIngredients(prev => [...prev, ''])
+        setIngredients(prev => [...prev, { name: '', amount: 0, unit: '' }])
     }
 
-    function updateIngredient(index: number, value: string) {
-        setIngredients(prev => prev.map((item, i) => i === index ? value : item))
+    function updateIngredient(index: number, field: keyof IngredientInput, value: string) {
+        setIngredients(prev => prev.map((ing, i) =>
+            i === index
+                ? { ...ing, [field]: field === 'amount' ? Number(value) || 0 : value }
+                : ing
+        ))
     }
 
     function removeIngredient(index: number) {
         setIngredients(prev => prev.filter((_, i) => i !== index))
     }
 
-    function addStep() {
-        setSteps(prev => [...prev, ''])
+    function updateNutrient(index: number, value: string) {
+        setNutrients(prev => prev.map((n, i) =>
+            i === index ? { ...n, amount: Number(value) || 0 } : n
+        ))
     }
 
-    function updateStep(index: number, value: string) {
-        setSteps(prev => prev.map((item, i) => i === index ? value : item))
+    function addCuisine() { setCuisines(prev => [...prev, '']) }
+    function updateCuisine(index: number, value: string) {
+        setCuisines(prev => prev.map((c, i) => i === index ? value : c))
+    }
+    function removeCuisine(index: number) {
+        setCuisines(prev => prev.filter((_, i) => i !== index))
     }
 
-    function removeStep(index: number) {
-        setSteps(prev => prev.filter((_, i) => i !== index))
+    function addDiet() { setDiets(prev => [...prev, '']) }
+    function updateDiet(index: number, value: string) {
+        setDiets(prev => prev.map((d, i) => i === index ? value : d))
     }
-
-    function updateNutrition(field: keyof NutritionFields, value: string) {
-        setNutrition(prev => ({ ...prev, [field]: value }))
+    function removeDiet(index: number) {
+        setDiets(prev => prev.filter((_, i) => i !== index))
     }
 
     async function handleSave() {
@@ -94,20 +112,25 @@ export default function CreateRecipe() {
         try {
             await api.post('/api/create-recipe', {
                 title,
-                tags: selectedTags,
-                cookingTime: Number(cookingTime) || 0,
-                description,
-                ingredients: ingredients.filter(i => i.trim() !== ''),
-                steps: steps.filter(s => s.trim() !== ''),
-                imageUrl,
+                image,
+                sourceUrl,
+                summary,
+                instructions,
+                readyInMinutes: Number(readyInMinutes) || 0,
+                servings:       Number(servings)       || 0,
+                healthScore:    Number(healthScore)    || 0,
+                dishTypes,
+                cuisines: cuisines.filter(c => c.trim() !== ''),
+                diets:    diets.filter(d => d.trim() !== ''),
+                vegetarian,
+                vegan,
+                glutenFree,
+                dairyFree,
+                ingredients: ingredients
+                    .filter(ing => ing.name.trim() !== '')
+                    .map((ing, i) => ({ id: i + 1, ...ing })),
                 nutrition: {
-                    energy:        Number(nutrition.energy)        || 0,
-                    totalFat:      Number(nutrition.totalFat)      || 0,
-                    saturatedFat:  Number(nutrition.saturatedFat)  || 0,
-                    carbohydrates: Number(nutrition.carbohydrates) || 0,
-                    sugars:        Number(nutrition.sugars)        || 0,
-                    fibre:         Number(nutrition.fibre)         || 0,
-                    sodium:        Number(nutrition.sodium)        || 0,
+                    nutrients: nutrients.filter(n => n.amount > 0),
                 },
             })
             setSaved(true)
@@ -141,9 +164,9 @@ export default function CreateRecipe() {
 
             <div
                 className="cr-cover"
-                style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : {}}
+                style={image ? { backgroundImage: `url(${image})` } : {}}
             >
-                {!imageUrl && <span className="cr-cover-placeholder">+ Add Cover Photo</span>}
+                {!image && <span className="cr-cover-placeholder">+ Add Cover Photo</span>}
             </div>
 
             <div className="cr-body">
@@ -153,8 +176,8 @@ export default function CreateRecipe() {
                     <input
                         className="cr-input"
                         placeholder="Paste an image URL here"
-                        value={imageUrl}
-                        onChange={e => setImageUrl(e.target.value)}
+                        value={image}
+                        onChange={e => setImage(e.target.value)}
                     />
                 </div>
 
@@ -166,36 +189,47 @@ export default function CreateRecipe() {
                 />
 
                 <div className="cr-field">
-                    <label className="cr-label">Tags</label>
+                    <label className="cr-label">Source URL (optional)</label>
+                    <input
+                        className="cr-input"
+                        placeholder="Link to original recipe"
+                        value={sourceUrl}
+                        onChange={e => setSourceUrl(e.target.value)}
+                    />
+                </div>
+
+                <div className="cr-field">
+                    <label className="cr-label">Dish Types</label>
                     <div className="cr-tags">
-                        {AVAILABLE_TAGS.map(tag => (
-                            <button
-                                key={tag}
-                                className="cr-tag"
-                                onClick={() => toggleTag(tag)}
-                                style={{
-                                    background: selectedTags.includes(tag)
-                                        ? TAG_COLOURS[tag]
-                                        : '#e0e0e0',
-                                    color: selectedTags.includes(tag) ? 'white' : '#555',
-                                }}
-                            >
-                                {tag}
-                            </button>
-                        ))}
+                        {DISH_TYPES.map(type => {
+                            const val = type.toLowerCase()
+                            return (
+                                <button
+                                    key={type}
+                                    className="cr-tag"
+                                    onClick={() => toggleDishType(val)}
+                                    style={{
+                                        background: dishTypes.includes(val) ? DISH_TYPE_COLOURS[type] : '#e0e0e0',
+                                        color: dishTypes.includes(val) ? 'white' : '#555',
+                                    }}
+                                >
+                                    {type}
+                                </button>
+                            )
+                        })}
                     </div>
                 </div>
 
                 <div className="cr-field">
-                    <label className="cr-label">Cooking Time</label>
+                    <label className="cr-label">Ready In</label>
                     <div className="cr-row">
                         <span>⏱</span>
                         <input
                             className="cr-input cr-input-sm"
                             type="number"
                             min="0"
-                            value={cookingTime}
-                            onChange={e => setCookingTime(e.target.value)}
+                            value={readyInMinutes}
+                            onChange={e => setReadyInMinutes(e.target.value)}
                             placeholder="0"
                         />
                         <span>minutes</span>
@@ -203,32 +237,102 @@ export default function CreateRecipe() {
                 </div>
 
                 <div className="cr-field">
-                    <label className="cr-label">Description</label>
+                    <label className="cr-label">Servings</label>
+                    <div className="cr-row">
+                        <input
+                            className="cr-input cr-input-sm"
+                            type="number"
+                            min="0"
+                            value={servings}
+                            onChange={e => setServings(e.target.value)}
+                            placeholder="0"
+                        />
+                        <span>servings</span>
+                    </div>
+                </div>
+
+                <div className="cr-field">
+                    <label className="cr-label">Health Score (0–100)</label>
+                    <input
+                        className="cr-input cr-input-sm"
+                        type="number"
+                        min="0"
+                        max="100"
+                        value={healthScore}
+                        onChange={e => setHealthScore(e.target.value)}
+                        placeholder="0"
+                    />
+                </div>
+
+                <div className="cr-field">
+                    <label className="cr-label">Dietary Info</label>
+                    <div className="cr-checkboxes">
+                        {([
+                            ['Vegetarian', vegetarian,  setVegetarian ],
+                            ['Vegan',      vegan,       setVegan      ],
+                            ['Gluten Free',glutenFree,  setGlutenFree ],
+                            ['Dairy Free', dairyFree,   setDairyFree  ],
+                        ] as [string, boolean, (v: boolean) => void][]).map(([label, val, setter]) => (
+                            <label key={label} className="cr-checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    checked={val}
+                                    onChange={e => setter(e.target.checked)}
+                                />
+                                {label}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="cr-field">
+                    <label className="cr-label">Summary</label>
                     <textarea
                         className="cr-textarea"
                         rows={3}
                         placeholder="Describe your recipe..."
-                        value={description}
-                        onChange={e => setDescription(e.target.value)}
+                        value={summary}
+                        onChange={e => setSummary(e.target.value)}
+                    />
+                </div>
+
+                <div className="cr-field">
+                    <label className="cr-label">Instructions</label>
+                    <textarea
+                        className="cr-textarea"
+                        rows={5}
+                        placeholder="Write the cooking instructions..."
+                        value={instructions}
+                        onChange={e => setInstructions(e.target.value)}
                     />
                 </div>
 
                 <div className="cr-field">
                     <label className="cr-label">Ingredients</label>
-                    {ingredients.map((ingredient, i) => (
+                    {ingredients.map((ing, i) => (
                         <div key={i} className="cr-list-row">
-                            <span className="cr-bullet">•</span>
                             <input
                                 className="cr-input cr-input-grow"
-                                value={ingredient}
-                                onChange={e => updateIngredient(i, e.target.value)}
-                                placeholder={`e.g. 2 cups flour`}
+                                value={ing.name}
+                                onChange={e => updateIngredient(i, 'name', e.target.value)}
+                                placeholder="Name"
+                            />
+                            <input
+                                className="cr-input cr-input-sm"
+                                type="number"
+                                min="0"
+                                value={ing.amount || ''}
+                                onChange={e => updateIngredient(i, 'amount', e.target.value)}
+                                placeholder="Amount"
+                            />
+                            <input
+                                className="cr-input cr-input-sm"
+                                value={ing.unit}
+                                onChange={e => updateIngredient(i, 'unit', e.target.value)}
+                                placeholder="Unit"
                             />
                             {ingredients.length > 1 && (
-                                <button
-                                    className="cr-remove-btn"
-                                    onClick={() => removeIngredient(i)}
-                                >✕</button>
+                                <button className="cr-remove-btn" onClick={() => removeIngredient(i)}>✕</button>
                             )}
                         </div>
                     ))}
@@ -236,50 +340,53 @@ export default function CreateRecipe() {
                 </div>
 
                 <div className="cr-field">
-                    <label className="cr-label">Steps</label>
-                    {steps.map((step, i) => (
-                        <div key={i} className="cr-list-row cr-list-row-top">
-                            <span className="cr-step-num">{i + 1}.</span>
-                            <textarea
-                                className="cr-textarea cr-input-grow"
-                                rows={2}
-                                value={step}
-                                onChange={e => updateStep(i, e.target.value)}
-                                placeholder={`Step ${i + 1}...`}
+                    <label className="cr-label">Cuisines</label>
+                    {cuisines.map((cuisine, i) => (
+                        <div key={i} className="cr-list-row">
+                            <input
+                                className="cr-input cr-input-grow"
+                                value={cuisine}
+                                onChange={e => updateCuisine(i, e.target.value)}
+                                placeholder="e.g. Italian"
                             />
-                            {steps.length > 1 && (
-                                <button
-                                    className="cr-remove-btn"
-                                    onClick={() => removeStep(i)}
-                                >✕</button>
+                            {cuisines.length > 1 && (
+                                <button className="cr-remove-btn" onClick={() => removeCuisine(i)}>✕</button>
                             )}
                         </div>
                     ))}
-                    <button className="cr-add-btn" onClick={addStep}>+ Add Step</button>
+                    <button className="cr-add-btn" onClick={addCuisine}>+ Add Cuisine</button>
+                </div>
+
+                <div className="cr-field">
+                    <label className="cr-label">Diets</label>
+                    {diets.map((diet, i) => (
+                        <div key={i} className="cr-list-row">
+                            <input
+                                className="cr-input cr-input-grow"
+                                value={diet}
+                                onChange={e => updateDiet(i, e.target.value)}
+                                placeholder="e.g. gluten free"
+                            />
+                            {diets.length > 1 && (
+                                <button className="cr-remove-btn" onClick={() => removeDiet(i)}>✕</button>
+                            )}
+                        </div>
+                    ))}
+                    <button className="cr-add-btn" onClick={addDiet}>+ Add Diet</button>
                 </div>
 
                 <div className="cr-field">
                     <label className="cr-label cr-label-bold">Nutritional Information</label>
                     <div className="cr-nutrition">
-                        {(
-                            [
-                                ['energy',        'Energy (kcal)'],
-                                ['totalFat',      'Total Fat (g)'],
-                                ['saturatedFat',  'Saturated Fat (g)'],
-                                ['carbohydrates', 'Carbohydrates (g)'],
-                                ['sugars',        'Sugars (g)'],
-                                ['fibre',         'Fibre (g)'],
-                                ['sodium',        'Sodium (g)'],
-                            ] as [keyof NutritionFields, string][]
-                        ).map(([field, label]) => (
-                            <div key={field} className="cr-nutrition-row">
-                                <span className="cr-nutrition-label">{label}</span>
+                        {nutrients.map((nutrient, i) => (
+                            <div key={nutrient.name} className="cr-nutrition-row">
+                                <span className="cr-nutrition-label">{nutrient.name} ({nutrient.unit})</span>
                                 <input
                                     className="cr-input cr-input-sm"
                                     type="number"
                                     min="0"
-                                    value={nutrition[field]}
-                                    onChange={e => updateNutrition(field, e.target.value)}
+                                    value={nutrient.amount || ''}
+                                    onChange={e => updateNutrient(i, e.target.value)}
                                     placeholder="0"
                                 />
                             </div>
