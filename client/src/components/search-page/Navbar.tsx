@@ -9,7 +9,6 @@ export default function Navbar() {
   const [headerMsg, setHeaderMsg] = useState("");
   const [bodyMsg, setBodyMsg] = useState("");
 
-
   const loggedIn = Boolean(getAccessToken());
 
   const handleCreateNav = (event: React.MouseEvent) => {

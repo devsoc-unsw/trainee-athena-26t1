@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
 import type { Ingredient, Nutrient } from '../types'
 import './CreateRecipe.css'
@@ -36,8 +35,6 @@ const DEFAULT_NUTRIENTS: Nutrient[] = [
 type IngredientInput = Omit<Ingredient, 'id'>
 
 export default function CreateRecipe() {
-    const navigate = useNavigate()
-
     const [title, setTitle]               = useState('Untitled Recipe')
     const [image, setImage]               = useState('')
     const [sourceUrl, setSourceUrl]       = useState('')
