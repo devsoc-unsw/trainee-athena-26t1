@@ -32,9 +32,11 @@
 }
 
 .dropdown-body {
-  padding-bottom: 14px;
-  padding-top: 20px;
+  padding-bottom: 25px;
+  padding-top: 0px;
   font-size: 14px;
   color: #555;
   line-height: 1.6;
+  padding-left: 20px;
+  padding-right: 20px;
 }

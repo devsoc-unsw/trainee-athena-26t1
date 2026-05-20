@@ -71,12 +71,13 @@
 
 .summary-section {
   margin: 0px 10px 20px 10px;
+  color: #111;
 }
 
 .summary-body {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1.7;
-  color: #444;
+  color: #111;
 }
 
 @media (min-width: 768px) {
@@ -97,6 +98,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 12px;
+  color: #111;
 }
 
 /* Nutrition Section */
