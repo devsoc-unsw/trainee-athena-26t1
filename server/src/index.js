@@ -258,7 +258,7 @@ app.post('/api/recipes/:id/save', authenticate, async (req, res) => {
         }
 
         res.status(200).json({
-            message: "Recipe saved succesfully",
+            message: "Recipe saved",
             savedRecipes: user.savedRecipes
         });
     } catch (error) {

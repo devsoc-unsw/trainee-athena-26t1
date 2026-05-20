@@ -59,16 +59,18 @@
 }
 
 .recipe-card-star .star-filled {
-  opacity: 0;
+  display: none;
   color: #ffcb1f;
 }
 
-.recipe-card-star:hover .star-empty {
-  opacity: 0;
+.recipe-card-star:hover .star-empty,
+.recipe-card-star.is-saved .star-empty {
+  display: none;
 }
 
-.recipe-card-star:hover .star-filled {
-  opacity: 1;
+.recipe-card-star:hover .star-filled,
+.recipe-card-star.is-saved .star-filled {
+  display: inline;
 }
 
 /* Tags */

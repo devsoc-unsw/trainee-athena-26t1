@@ -5,18 +5,31 @@ import Card from "../components/search-page/CardSaving";
 import SearchBar, { DEFAULT_FILTERS } from "../components/search-page/Searchbar";
 import type { Filters } from "../types";
 import "./Home.css";
+import { useNavigate } from "react-router-dom";
+import { getAccessToken } from "../auth";
 
 export default function Home() {
+  const navigate = useNavigate();
+
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [savedRecipeIds, setSavedRecipeIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
   useEffect(() => {
     async function fetchRecipes() {
       try {
         const response = await api.get<RecipeListResponse>("/api/recipes");
         setRecipes(response.data.results);
+
+        const token = getAccessToken();
+
+        if (token) {
+          const savedResponse = await api.get("/api/saved-recipes");
+          setSavedRecipeIds(savedResponse.data.savedRecipeIds ?? []);
+        }
       } catch (err) {
         setError("Failed to load recipes.");
       } finally {
@@ -26,6 +39,27 @@ export default function Home() {
 
     fetchRecipes();
   }, []);
+
+  const handleSaveRecipeToggle = async (recipeId: number, isCurrSaved: boolean) => {
+    const token = getAccessToken();
+
+    if (!token) {
+      setShowLoginPopup(true);
+      return;
+    }
+
+    try {
+      if (isCurrSaved) {
+        const res = await api.delete(`/api/recipes/${recipeId}/save`);
+        setSavedRecipeIds(res.data.savedRecipeIds ?? []);
+      } else {
+        const res = await api.post(`/api/recipes/${recipeId}/save`);
+        setSavedRecipeIds(res.data.savedRecipeIds ?? []);
+      }
+    } catch (error) {
+      setShowLoginPopup(true);
+    }
+  };
 
   if (loading) return <p className="home-status">Loading...</p>;
   if (error) return <p className="home-status">{error}</p>;
@@ -69,8 +103,38 @@ export default function Home() {
       ) : (
         <div className="recipe-grid">
           {filteredRecipes.map((recipe) => (
-            <Card key={recipe.id} recipe={recipe} />
+            <Card 
+              key={recipe.id} 
+              recipe={recipe}
+              isSaved={savedRecipeIds.includes(recipe.id)}
+              onToggleSave={handleSaveRecipeToggle} 
+            />
           ))}
+        </div>
+      )}
+
+      {showLoginPopup && (
+        <div 
+          className="login-popup-backdrop"
+          onClick={() => {setShowLoginPopup(false)}}
+        >
+          <div 
+            className="login-popup"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <h2>Log in to save recipes</h2>
+            <p>You need to be logged in before you can favourite recipes.</p>
+
+            <div className="login-popup-actions">
+              <button onClick={() => navigate("/login")}>Go to login</button>
+              <button
+                className="secondary-button"
+                onClick={() => setShowLoginPopup(false)}
+              >
+                Not now
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

@@ -4,14 +4,12 @@ import "./Card.css";
 
 type Props = {
   recipe: Recipe;
+  isSaved: boolean;
+  onToggleSave: (recipeId: number, isCurrSaved: boolean) => void;
 };
 
-export default function Card({ recipe }: Props) {
+export default function Card({ recipe, isSaved, onToggleSave }: Props) {
   const navigate = useNavigate();
-
-  const handleSaveRecipe = () => {
-
-  };
 
   // Pick up to 2 tags to show on the card image
   const tags: { label: string; color: string }[] = [];
@@ -38,7 +36,14 @@ export default function Card({ recipe }: Props) {
           className="recipe-card-image"
         />
 
-        <button className="recipe-card-star" onClick={handleSaveRecipe}>
+        <button 
+          className={`recipe-card-star ${isSaved ? "is-saved" : ""}`} 
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onToggleSave(recipe.id, isSaved);
+          }}
+        >
           <i className="bi bi-star star-empty" />
           <i className="bi bi-star-fill star-filled" />
         </button>
