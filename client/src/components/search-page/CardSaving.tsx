@@ -9,6 +9,10 @@ type Props = {
 export default function Card({ recipe }: Props) {
   const navigate = useNavigate();
 
+  const handleSaveRecipe = () => {
+
+  };
+
   // Pick up to 2 tags to show on the card image
   const tags: { label: string; color: string }[] = [];
 
@@ -34,8 +38,11 @@ export default function Card({ recipe }: Props) {
           className="recipe-card-image"
         />
 
-        <i className="bi bi-star recipe-card-star" />
-        
+        <button className="recipe-card-star" onClick={handleSaveRecipe}>
+          <i className="bi bi-star star-empty" />
+          <i className="bi bi-star-fill star-filled" />
+        </button>
+
         {tags.length > 0 && (
           <div className="recipe-card-tags">
             {tags.slice(0, 2).map((tag) => (

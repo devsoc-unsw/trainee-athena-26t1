@@ -48,8 +48,27 @@
   color: #fff;
   background: rgba(0, 0, 0, 0.226);
   border-radius: 999px;
+  border-color: #00000000;
   cursor: pointer;
   z-index: 2;
+}
+
+.recipe-card-star i {
+  grid-area: 1 / 1;
+  font-size: 22px;
+}
+
+.recipe-card-star .star-filled {
+  opacity: 0;
+  color: #ffcb1f;
+}
+
+.recipe-card-star:hover .star-empty {
+  opacity: 0;
+}
+
+.recipe-card-star:hover .star-filled {
+  opacity: 1;
 }
 
 /* Tags */

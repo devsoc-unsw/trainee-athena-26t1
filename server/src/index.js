@@ -80,53 +80,6 @@ app.post('/api/create-recipe', async (req, res) => {
     }
 });
 
-// User saves recipe
-app.post('/api/users/:userId/saved-recipes', async (req, res) => {
-    try {
-        const { userId } = req.params;
-        const { recipeId } = req.body;
-
-        const recipe = await Recipe.findById(recipeId);
-        if (!recipe) {
-            return res.status(404).json({ error: "Recipe not found" });
-        }
-
-        const user = await User.findOneAndUpdate(
-            { userId },
-            { $addToSet: { savedRecipes: recipe._id } },
-            { new: true }
-        ).populate("savedRecipes");
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        res.status(200).json({
-            message: "Recipe saved succesfully",
-            savedRecipes: user.savedRecipes
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Given a user's ID, get their saved recipes
-app.get('/api/users/:userId/saved-recipes', async (req, res) => {
-    try {
-        const { userId } = req.params;
-
-        const user = await User.findOne({ userId }).populate("savedRecipes");
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        res.json({ savedRecipes: user.savedRecipes });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
 // Unused routes (implement frontend first)
 
 // TODO: For these, check if the user actually owns this recipe
@@ -281,6 +234,85 @@ app.get('/api/recipes/:id', (req, res) => {
     }
 
     res.json(formatRecipe(recipe));
+});
+
+// User saves recipe
+app.post('/api/recipes/:id/save', authenticate, async (req, res) => {
+    try {
+        const recipeId = Number(req.params.id);
+
+        const recipe = recipes.find((recipe) => recipe.id === recipeId);
+
+        if (!recipe) {
+            return res.status(404).json({ error: "Recipe not found" });
+        }
+
+        const user = await User.findOneAndUpdate(
+            { userId: req.userId },
+            { $addToSet: { savedRecipes: recipeId } },
+            { new: true }
+        );
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Recipe saved succesfully",
+            savedRecipes: user.savedRecipes
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Unsave a recipe
+
+app.delete("/api/recipes/:id/save", authenticate, async (req, res) => {
+  try {
+    const recipeId = Number(req.params.id);
+
+    const user = await User.findOneAndUpdate(
+      { userId: req.userId },
+      { $pull: { savedRecipes: recipeId } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.json({
+      message: "Recipe unsaved",
+      savedRecipeIds: user.savedRecipes,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Given a user's ID, get their saved recipes
+app.get("/api/saved-recipes", authenticate, async (req, res) => {
+    try {
+        const user = await User.findOne({ userId: req.userId });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        const savedRecipeIds = new Set(user.savedRecipes);
+
+        const savedRecipes = recipes
+            .filter((recipe) => savedRecipeIds.has(recipe.id))
+            .map(formatRecipe);
+
+        res.json({
+            savedRecipeIds: user.savedRecipes,
+            results: savedRecipes,
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // ============================================
