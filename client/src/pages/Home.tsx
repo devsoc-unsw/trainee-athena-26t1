@@ -5,12 +5,10 @@ import Card from "../components/search-page/CardSaving";
 import SearchBar, { DEFAULT_FILTERS } from "../components/search-page/Searchbar";
 import type { Filters } from "../types";
 import "./Home.css";
-import { useNavigate } from "react-router-dom";
 import { getAccessToken } from "../auth";
+import LoginPopup from "../components/search-page/LoginPopup";
 
 export default function Home() {
-  const navigate = useNavigate();
-
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [savedRecipeIds, setSavedRecipeIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,36 +105,14 @@ export default function Home() {
               key={recipe.id} 
               recipe={recipe}
               isSaved={savedRecipeIds.includes(recipe.id)}
+              isLoggedIn={Boolean(getAccessToken())}
               onToggleSave={handleSaveRecipeToggle} 
             />
           ))}
         </div>
       )}
 
-      {showLoginPopup && (
-        <div 
-          className="login-popup-backdrop"
-          onClick={() => {setShowLoginPopup(false)}}
-        >
-          <div 
-            className="login-popup"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h2>Log in to save recipes</h2>
-            <p>You need to be logged in before you can favourite recipes.</p>
-
-            <div className="login-popup-actions">
-              <button onClick={() => navigate("/login")}>Go to login</button>
-              <button
-                className="secondary-button"
-                onClick={() => setShowLoginPopup(false)}
-              >
-                Not now
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {showLoginPopup && <LoginPopup setShowLoginPopup={setShowLoginPopup} />}
     </div>
   );
 }

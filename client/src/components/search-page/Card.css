@@ -58,19 +58,42 @@
   font-size: 22px;
 }
 
+/* Default: empty star */
 .recipe-card-star .star-filled {
   display: none;
   color: #ffcb1f;
 }
 
-.recipe-card-star:hover .star-empty,
+.recipe-card-star .star-empty {
+  display: inline;
+  color: #fff;
+}
+
+/* Not saved + hover: show filled star temporarily */
+.recipe-card-star:not(.is-saved):hover .star-empty {
+  display: none;
+}
+
+.recipe-card-star:not(.is-saved):hover .star-filled {
+  display: inline;
+}
+
+/* Saved: show filled star normally */
 .recipe-card-star.is-saved .star-empty {
   display: none;
 }
 
-.recipe-card-star:hover .star-filled,
 .recipe-card-star.is-saved .star-filled {
   display: inline;
+}
+
+/* Saved + hover: show empty star temporarily */
+.recipe-card-star.is-saved:hover .star-empty {
+  display: inline;
+}
+
+.recipe-card-star.is-saved:hover .star-filled {
+  display: none;
 }
 
 /* Tags */
