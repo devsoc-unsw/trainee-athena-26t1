@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import type { Recipe, RecipeListResponse } from "../types";
-import Card from "../components/search-page/Card";
+import Card from "../components/search-page/CardSaving";
 import SearchBar, { DEFAULT_FILTERS } from "../components/search-page/Searchbar";
 import type { Filters } from "../types";
 import "./Home.css";
