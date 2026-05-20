@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api'
-import { Ingredient, Nutrient } from '../types'
+import type { Ingredient, Nutrient } from '../types'
 import './CreateRecipe.css'
 
 const DISH_TYPES = [
@@ -147,7 +147,7 @@ export default function CreateRecipe() {
 
             <div className="cr-header">
                 <span className="cr-header-title">NEW RECIPE</span>
-                <div className="cr-header-icons">
+                {/* <div className="cr-header-icons">
                     <button className="cr-icon-btn" onClick={() => navigate('/saved')} title="Saved Recipes">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
@@ -159,7 +159,7 @@ export default function CreateRecipe() {
                             <circle cx="12" cy="7" r="4"/>
                         </svg>
                     </button>
-                </div>
+                </div> */}
             </div>
 
             <div
