@@ -4,9 +4,11 @@ import "./LoginPopup.css";
 
 type Props = {
   setShowLoginPopup: (value: boolean) => void;
+  headerMsg: string;
+  bodyMsg: string;
 };
 
-export default function LoginPopup({ setShowLoginPopup }: Props) {
+export default function LoginPopup({ setShowLoginPopup, headerMsg, bodyMsg }: Props) {
     const navigate = useNavigate();
 
     return (
@@ -18,8 +20,8 @@ export default function LoginPopup({ setShowLoginPopup }: Props) {
             className="login-popup"
             onClick={(event) => event.stopPropagation()}
           >
-            <h2>Log in to save recipes</h2>
-            <p>You need to be logged in before you can favourite recipes.</p>
+            <h2>{headerMsg}</h2>
+            <p>{bodyMsg}</p>
 
             <div className="login-popup-actions">
               <button onClick={() => navigate("/login")}>Go to login</button>

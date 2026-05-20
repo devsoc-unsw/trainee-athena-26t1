@@ -36,8 +36,10 @@
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 17px;
   flex-shrink: 0;
+  padding-right: 15px;
+  margin-top: -2px;
 }
 
 .navbar-icon-btn {
