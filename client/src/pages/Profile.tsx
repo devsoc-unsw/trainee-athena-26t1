@@ -72,7 +72,7 @@ export default function Profile() {
 
       <div className="profileMaster">
         <Stack spacing={2} sx={{ width: "100%", alignItems: "center" }}>
-          <Box className="profileLogo">
+          <Box className="profileLogo" sx={{ paddingTop: '55px' }}>
             <Box className="profileLogoMeal" sx={{ boxShadow: 6 }}>
               Meal
             </Box>
@@ -81,7 +81,7 @@ export default function Profile() {
             </Box>
           </Box>
 
-          <Typography variant="h6" className="profileSectionTitle">
+          <Typography variant="h6" className="profileSectionTitle" sx={{ paddingTop: '15px' }}>
             Your account
           </Typography>
           <Typography className="profileEmail">{auth.email}</Typography>

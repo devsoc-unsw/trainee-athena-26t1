@@ -1,12 +1,16 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import fs from 'fs';
-import dotenv from 'dotenv';
-import Item from './models/Item.js';
-import Recipe from './models/Recipe.js';
-import User from './models/Auth.js';
-import { register, login, authenticate, changePassword } from '../scripts/userServices.js';
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import Item from "./models/Item.js";
+import fs from "fs";
+import Recipe from "./models/Recipe.js";
+import {
+  register,
+  login,
+  authenticate,
+  changePassword,
+} from "../scripts/userServices.js";
 
 dotenv.config();
 
@@ -19,13 +23,13 @@ app.use(express.json());
 
 // MongoDB Connection
 async function connectDB() {
-    try {
-        const conn = await mongoose.connect(process.env.MONGODB_URI);
-        console.log(`MongoDB connected: ${conn.connection.host}`);
-    } catch (error) {
-        console.error('MongoDB connection error:', error);
-        process.exit(1);
-    }
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`MongoDB connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    process.exit(1);
+  }
 }
 
 connectDB();
@@ -36,48 +40,48 @@ connectDB();
 // ============================================
 
 // Health Check - Test if server is running
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'Server is running' });
+app.get("/api/health", (req, res) => {
+  res.json({ status: "Server is running" });
 });
 
 // Auth
-app.post('/api/auth/register', register);
+app.post("/api/auth/register", register);
 
-app.post('/api/auth/login', login);
+app.post("/api/auth/login", login);
 
-app.post('/api/auth/change-password', authenticate, changePassword);
+app.post("/api/auth/change-password", authenticate, changePassword);
 
 // GET all recipes from database
-app.get('/api/v2/recipes', async (req, res) => {
-    try {
-        const recipes = await Recipe.find();
-        res.json(recipes);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+app.get("/api/v2/recipes", async (req, res) => {
+  try {
+    const recipes = await Recipe.find();
+    res.json(recipes);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // GET single recipe by ID
-app.get('/api/v2/recipes/:id', async (req, res) => {
-    try {
-        const recipe = await Recipe.findById(req.params.id);
-        if (!recipe) {
-            return res.status(404).json({ error: 'Recipe not found' });
-        }
-        res.json(recipe);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+app.get("/api/v2/recipes/:id", async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
     }
+    res.json(recipe);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // CREATE a new recipe
-app.post('/api/create-recipe', async (req, res) => {
-    try {
-        const newRecipe = await Recipe.create(req.body);
-        res.status(201).json(newRecipe);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+app.post("/api/create-recipe", async (req, res) => {
+  try {
+    const newRecipe = await Recipe.create(req.body);
+    res.status(201).json(newRecipe);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Unused routes (implement frontend first)
@@ -86,28 +90,31 @@ app.post('/api/create-recipe', async (req, res) => {
 // and is authenticated to modify them
 
 // UPDATE an item
-app.put('/api/items/:id', async (req, res) => {
-    try {
-        const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedItem) {
-            return res.status(404).json({ error: 'Item not found' });
-        }
-        res.json(updatedItem);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+app.put("/api/items/:id", async (req, res) => {
+  try {
+    const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!updatedItem) {
+      return res.status(404).json({ error: "Item not found" });
     }
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-app.delete('/api/items/:id', async (req, res) => {
-    try {
-        const deletedItem = await Item.findByIdAndDelete(req.params.id);
-        if (!deletedItem) {
-            return res.status(404).json({ error: 'Item not found' });
-        }
-        res.json({ message: 'Item deleted successfully', deletedItem });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+// DELETE an item
+app.delete("/api/items/:id", async (req, res) => {
+  try {
+    const deletedItem = await Item.findByIdAndDelete(req.params.id);
+    if (!deletedItem) {
+      return res.status(404).json({ error: "Item not found" });
     }
+    res.json({ message: "Item deleted successfully", deletedItem });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // ============================================
@@ -117,122 +124,123 @@ app.delete('/api/items/:id', async (req, res) => {
 
 // We're not using recipe-nutrients-sample.json for now
 const recipeData = JSON.parse(
-    fs.readFileSync("recipe-info-sample.json", "utf-8")
+  fs.readFileSync("recipe-info-sample.json", "utf-8"),
 );
 
-const recipes = recipeData.results.filter((recipe) =>
+const recipes = recipeData.results.filter(
+  (recipe) =>
     recipe.id &&
     recipe.title &&
     recipe.image &&
     recipe.readyInMinutes &&
     recipe.servings &&
-    recipe.nutrition?.nutrients?.length > 0
+    recipe.nutrition?.nutrients?.length > 0,
 );
 
 const KEY_NUTRIENTS = [
-    "Calories",
-    "Protein",
-    "Fat",
-    "Saturated Fat",
-    "Carbohydrates",
-    "Sugar",
-    "Fiber",
-    "Cholesterol",
-    "Sodium",
-    "Calcium",
-    "Iron",
-    "Potassium",
-    "Magnesium",
-    "Zinc",
-    "Vitamin A",
-    "Vitamin C",
-    "Vitamin D",
-    "Vitamin B12",
+  "Calories",
+  "Protein",
+  "Fat",
+  "Saturated Fat",
+  "Carbohydrates",
+  "Sugar",
+  "Fiber",
+  "Cholesterol",
+  "Sodium",
+  "Calcium",
+  "Iron",
+  "Potassium",
+  "Magnesium",
+  "Zinc",
+  "Vitamin A",
+  "Vitamin C",
+  "Vitamin D",
+  "Vitamin B12",
 ];
 
 const getKeyNutrients = (recipe) => {
-    const nutrients = recipe.nutrition?.nutrients || [];
+  const nutrients = recipe.nutrition?.nutrients || [];
 
-    return KEY_NUTRIENTS.map((nutrientName) => {
-        const nutrient = nutrients.find((n) => n.name === nutrientName);
+  return KEY_NUTRIENTS.map((nutrientName) => {
+    const nutrient = nutrients.find((n) => n.name === nutrientName);
 
-        if (!nutrient) return null;
+    if (!nutrient) return null;
 
-        return {
-            name: nutrient.name,
-            amount: Math.round(nutrient.amount),
-            unit: nutrient.unit,
-            percentOfDailyNeeds: nutrient.percentOfDailyNeeds
-        };
-    }).filter(Boolean);
+    return {
+      name: nutrient.name,
+      amount: Math.round(nutrient.amount),
+      unit: nutrient.unit,
+      percentOfDailyNeeds: nutrient.percentOfDailyNeeds,
+    };
+  }).filter(Boolean);
 };
 
 // Formats the recipe result with the desired attributes
 const formatRecipe = (recipe) => {
-    return {
-        id: recipe.id,
-        image: recipe.image,
-        title: recipe.title,
-        readyInMinutes: recipe.readyInMinutes,
-        servings: recipe.servings,
-        sourceUrl: recipe.sourceUrl,
+  return {
+    id: recipe.id,
+    image: recipe.image,
+    title: recipe.title,
+    readyInMinutes: recipe.readyInMinutes,
+    servings: recipe.servings,
+    sourceUrl: recipe.sourceUrl,
 
-        // Dietaries
-        vegetarian: recipe.vegetarian,
-        vegan: recipe.vegan,
-        glutenFree: recipe.glutenFree,
-        dairyFree: recipe.dairyFree,
+    // Dietaries
+    vegetarian: recipe.vegetarian,
+    vegan: recipe.vegan,
+    glutenFree: recipe.glutenFree,
+    dairyFree: recipe.dairyFree,
 
-        // Misc info
-        preparationMinutes: recipe.preparationMinutes,
-        cookingMinutes: recipe.cookingMinutes,
-        healthScore: recipe.healthScore,
+    // Misc info
+    preparationMinutes: recipe.preparationMinutes,
+    cookingMinutes: recipe.cookingMinutes,
+    healthScore: recipe.healthScore,
 
-        ingredients: recipe.ingredients?.map((ingredient) => ({
-            id: ingredient.id,
-            name: ingredient.name,
-            amount: ingredient.amount,
-            unit: ingredient.unit
-        })) || [],
+    ingredients:
+      recipe.extendedIngredients?.map((ingredient) => ({
+        id: ingredient.id,
+        name: ingredient.name,
+        amount: ingredient.amount,
+        unit: ingredient.unit,
+      })) || [],
+    nutrition: {
+      nutrients: getKeyNutrients(recipe),
+    },
 
-        nutrition: {
-            nutrients: getKeyNutrients(recipe)
-        },
-
-        summary: recipe.summary,
-        cuisines: recipe.cuisines || [],
-        dishTypes: recipe.dishTypes || [],
-        diets: recipe.diets || [],
-        instructions: recipe.instructions
-    };
+    summary: recipe.summary,
+    cuisines: recipe.cuisines || [],
+    dishTypes: recipe.dishTypes || [],
+    diets: recipe.diets || [],
+    instructions: recipe.instructions,
+  };
 };
 
 // GET /api/recipes
-app.get('/api/recipes', (req, res) => {
-    res.json({ results: recipes.map(formatRecipe) });
+app.get("/api/recipes", (req, res) => {
+  res.json({ results: recipes.map(formatRecipe) });
 });
 
 // Search for an item with query
-app.get('/api/recipes/search', (req, res) => {
-    const query = req.query.query?.toLowerCase() || "";
-    const filteredRecipes = recipes.filter((recipe) => {
-        recipe.title.toLowerCase().includes(query)
-    });
+app.get("/api/recipes/search", (req, res) => {
+  const query = req.query.query?.toLowerCase() || "";
+  const filteredRecipes = recipes.filter((recipe) => {
+    recipe.title.toLowerCase().includes(query);
+  });
 
-    res.json({ results: filteredRecipes.map(formatRecipe) });
+  res.json({ results: filteredRecipes.map(formatRecipe) });
 });
 
 // GET /api/recipes/:id
-app.get('/api/recipes/:id', (req, res) => {
-    const recipeId = Number(req.params.id);
+app.get("/api/recipes/:id", (req, res) => {
+  const recipeId = Number(req.params.id);
 
-    const recipe = recipes.find((recipe) => recipe.id === recipeId);
+  const recipe = recipes.find((recipe) => recipe.id === recipeId);
 
-    if (!recipe) {
-        return res.status(404).json({ error: "Recipe not found" });
-    }
+  if (!recipe) {
+    return res.status(404).json({ error: "Recipe not found" });
+  }
 
-    res.json(formatRecipe(recipe));
+  res.json(formatRecipe(recipe));
 });
 
 // ============================================
@@ -240,33 +248,33 @@ app.get('/api/recipes/:id', (req, res) => {
 // ============================================
 
 // Saves new recipe
-app.post('/api/recipes/:id/save', authenticate, async (req, res) => {
-    try {
-        const recipeId = Number(req.params.id);
+app.post("/api/recipes/:id/save", authenticate, async (req, res) => {
+  try {
+    const recipeId = Number(req.params.id);
 
-        const recipe = recipes.find((recipe) => recipe.id === recipeId);
+    const recipe = recipes.find((recipe) => recipe.id === recipeId);
 
-        if (!recipe) {
-            return res.status(404).json({ error: "Recipe not found" });
-        }
-
-        const user = await User.findOneAndUpdate(
-            { userId: req.userId },
-            { $addToSet: { savedRecipes: recipeId } },
-            { new: true }
-        );
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        res.status(200).json({
-            message: "Recipe saved",
-            savedRecipeIds: user.savedRecipes
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (!recipe) {
+      return res.status(404).json({ error: "Recipe not found" });
     }
+
+    const user = await User.findOneAndUpdate(
+      { userId: req.userId },
+      { $addToSet: { savedRecipes: recipeId } },
+      { new: true },
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    res.status(200).json({
+      message: "Recipe saved",
+      savedRecipeIds: user.savedRecipes,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // Unsaves a recipe
@@ -277,7 +285,7 @@ app.delete("/api/recipes/:id/save", authenticate, async (req, res) => {
     const user = await User.findOneAndUpdate(
       { userId: req.userId },
       { $pull: { savedRecipes: recipeId } },
-      { new: true }
+      { new: true },
     );
 
     if (!user) {
@@ -295,31 +303,31 @@ app.delete("/api/recipes/:id/save", authenticate, async (req, res) => {
 
 // Given a user's ID, get their saved recipes
 app.get("/api/saved-recipes", authenticate, async (req, res) => {
-    try {
-        const user = await User.findOne({ userId: req.userId });
+  try {
+    const user = await User.findOne({ userId: req.userId });
 
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
-
-        const savedRecipeIds = new Set(user.savedRecipes);
-
-        const savedRecipes = recipes
-            .filter((recipe) => savedRecipeIds.has(recipe.id))
-            .map(formatRecipe);
-
-        res.json({
-            recipes: savedRecipes,
-            savedRecipeIds: user.savedRecipes,
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
     }
+
+    const savedRecipeIds = new Set(user.savedRecipes);
+
+    const savedRecipes = recipes
+      .filter((recipe) => savedRecipeIds.has(recipe.id))
+      .map(formatRecipe);
+
+    res.json({
+      recipes: savedRecipes,
+      savedRecipeIds: user.savedRecipes,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // ============================================
 // Start Server
 // ============================================
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
