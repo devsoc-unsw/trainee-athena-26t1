@@ -111,7 +111,13 @@ export default function Home() {
         </div>
       )}
 
-      {showLoginPopup && <LoginPopup setShowLoginPopup={setShowLoginPopup} />}
+      {showLoginPopup && 
+        <LoginPopup 
+          setShowLoginPopup={setShowLoginPopup}
+          headerMsg={"Log in to save this recipe"}
+          bodyMsg={"You need to be logged in before you can save your favourite recipes."}
+        />
+      }
     </div>
   );
 }
