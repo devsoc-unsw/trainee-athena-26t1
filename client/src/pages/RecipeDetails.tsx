@@ -6,10 +6,8 @@ import { api } from "../api";
 import Dropdown from "../components/detailed-recipe-page/Dropdown";
 import "./RecipeDetails.css";
 
-import star from "../assets/detailed-recipe-page/star.png";
+// import star from "../assets/detailed-recipe-page/star.png";
 import time from "../assets/detailed-recipe-page/time.png";
-// import vegan from "../assets/detailed-recipe-page/vegan.png";
-// import easy from "../assets/detailed-recipe-page/easy.png";
 
 import {
   FaFire,
@@ -57,7 +55,7 @@ export default function RecipeDetails() {
       <div className="text-section">
         <div className="title-and-rating">
           <p className="recipe-title">{recipe.title}</p>
-          <img className="recipe-rating" src={star} alt="star" />
+          {/* <img className="recipe-rating" src={star} alt="star" /> */}
         </div>
 
         <div className="recipe-details-info">

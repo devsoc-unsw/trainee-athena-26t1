@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import Item from "./models/Item.js";
 import fs from "fs";
 import Recipe from "./models/Recipe.js";
+import User from "./models/Auth.js";
 import {
   register,
   login,

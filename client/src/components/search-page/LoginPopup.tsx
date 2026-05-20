@@ -12,27 +12,27 @@ export default function LoginPopup({ setShowLoginPopup, headerMsg, bodyMsg }: Pr
     const navigate = useNavigate();
 
     return (
+      <div 
+        className="login-popup-backdrop"
+        onClick={() => {setShowLoginPopup(false)}}
+      >
         <div 
-          className="login-popup-backdrop"
-          onClick={() => {setShowLoginPopup(false)}}
+          className="login-popup"
+          onClick={(event) => event.stopPropagation()}
         >
-          <div 
-            className="login-popup"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h2>{headerMsg}</h2>
-            <p>{bodyMsg}</p>
+          <h2>{headerMsg}</h2>
+          <p>{bodyMsg}</p>
 
-            <div className="login-popup-actions">
-              <button onClick={() => navigate("/login")}>Go to login</button>
-              <button
-                className="secondary-button"
-                onClick={() => setShowLoginPopup(false)}
-              >
-                Not now
-              </button>
-            </div>
+          <div className="login-popup-actions">
+            <button onClick={() => { navigate("/login"); setShowLoginPopup(false); }}>Go to login</button>
+            <button
+              className="secondary-button"
+              onClick={() => setShowLoginPopup(false)}
+            >
+              Not now
+            </button>
           </div>
         </div>
+      </div>
     );
 }

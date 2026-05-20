@@ -21,18 +21,22 @@ export default function Home() {
       try {
         const response = await api.get<RecipeListResponse>("/api/recipes");
         setRecipes(response.data.results);
-
-        const token = getAccessToken();
-
-        if (token) {
-          const savedResponse = await api.get("/api/saved-recipes");
-          setSavedRecipeIds(savedResponse.data.savedRecipeIds ?? []);
-        }
       } catch (err) {
         setError("Failed to load recipes.");
-      } finally {
-        setLoading(false);
       }
+
+      const token = getAccessToken();
+
+      if (token) {
+        try {
+          const savedResponse = await api.get("/api/saved-recipes");
+          setSavedRecipeIds((savedResponse.data.savedRecipeIds ?? []).map(Number));
+        } catch (err) {
+          console.log("Failed to load saved recipes: ", err);
+          setSavedRecipeIds([]);
+        }
+      }
+        setLoading(false);
     }
 
     fetchRecipes();
