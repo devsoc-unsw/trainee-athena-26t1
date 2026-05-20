@@ -135,11 +135,22 @@ export default function RecipeDetails() {
           </Dropdown>
 
           <Dropdown title="Ingredients">
-            {recipe.ingredients.length > 0 ? (
-              <ul>
+            {recipe.ingredients?.length ? (
+              <ul className="ingredients-list">
                 {recipe.ingredients.map((ingredient) => (
-                  <li key={`${ingredient.id}-${ingredient.name}`}>
-                    {ingredient.amount} {ingredient.unit} {ingredient.name}
+                  <li
+                    className="ingredient-item"
+                    key={`${ingredient.id}-${ingredient.name}`}
+                  >
+                    <div className="ingredient-left">
+                      <div className="ingredient-dot" />
+
+                      <span className="ingredient-name">{ingredient.name}</span>
+                    </div>
+
+                    <span className="ingredient-amount">
+                      {ingredient.amount} {ingredient.unit}
+                    </span>
                   </li>
                 ))}
               </ul>

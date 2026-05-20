@@ -42,7 +42,7 @@
 
 .recipe-title {
   font-size: 2.2rem;
-  font-weight: 800;
+  font-weight: bold;
   line-height: 1.1;
   letter-spacing: -1.5px;
   color: #111827;
@@ -88,7 +88,7 @@
 .summary-section,
 .dropdown-container {
   background: white;
-  border-radius: 24px;
+  border-radius: 15px;
   padding: 28px;
   border: 1px solid #ececec;
 
@@ -146,18 +146,14 @@
 }
 
 .nutrition-card {
-  border-radius: 22px;
+  border-radius: 15px;
   padding: 20px;
   background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
-
   border: 1px solid #ececec;
-
   display: flex;
   gap: 16px;
   align-items: flex-start;
-
   transition: all 0.25s ease;
-
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.03),
     0 8px 20px rgba(0, 0, 0, 0.03);
@@ -170,17 +166,12 @@
   width: 52px;
   height: 52px;
   border-radius: 16px;
-
   background: #ffece7;
-
   color: #660505;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-size: 1.25rem;
-
   flex-shrink: 0;
 }
 .nutrition-name {
@@ -216,13 +207,6 @@
   background: #c0392b;
 }
 
-/* Instructions */
-.instructions-body {
-  font-size: 0.88rem;
-  line-height: 1.75;
-  color: #444;
-}
-
 /* Ingredients */
 .ingredients-list {
   display: flex;
@@ -231,4 +215,53 @@
   padding: 0;
   margin: 0;
   list-style: none;
+}
+
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  list-style: none;
+  padding-top: 15px;
+  margin: 0;
+}
+
+.ingredient-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 17px;
+  border-radius: 15px;
+  background: #ffffff;
+  border: 1px solid #ececec;
+  transition: all 0.22s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.ingredient-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ingredient-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #660505;
+}
+
+.ingredient-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1b0404;
+}
+
+.ingredient-amount {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #360606;
+  /* padding: 6px 8px; */
+  white-space: nowrap;
 }
