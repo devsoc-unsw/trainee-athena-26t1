@@ -69,12 +69,12 @@ export default function Register() {
           />
 
           <Stack
-            direction={{ xs: "column", md: "row" }}
+            direction={{ xs: "column", sm: "row" }}
             sx={{ justifyContent: "space-between", width: "75%", alignItems: "center" }}
           >
             <FormControlLabel control={<Checkbox />} label="Keep me signed in" />
             <Link component={RouterLink} to="/login">
-              Already have an account? Log in
+              Already have an account?
             </Link>
           </Stack>
 

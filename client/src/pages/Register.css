@@ -29,7 +29,7 @@
 .registerLogo {
   font-weight: bold;
   color: black;
-  font-size: clamp(24px, 5vw, 50px);
+  font-size: clamp(40px, 5vw, 50px);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -53,4 +53,13 @@
 
 .registerInput {
   width: 75%;
+}
+
+@media (max-width: 1150px) {
+  .registerBackground {
+    display: none;
+  }
+  .registerMaster {
+    width: 100%;
+  }
 }

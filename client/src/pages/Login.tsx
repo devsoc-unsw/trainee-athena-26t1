@@ -76,7 +76,7 @@ export default function Login() {
           />
 
           <Stack
-            direction={{ xs: "column", md: "row" }}
+            direction={{ xs: "column", sm: "row" }}
             sx={{ justifyContent: "space-between", width: "75%", alignItems: "center" }}
           >
             <FormControlLabel

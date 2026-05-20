@@ -20,7 +20,7 @@
 .logo {
   font-weight: bold;
   color: black;
-  font-size: clamp(24px, 5vw, 50px);
+  font-size: clamp(40px, 5vw, 50px);
   display:flex;
   flex-direction: row;
   justify-content: center;
@@ -53,4 +53,13 @@
   overflow: hidden;
   display: flex;
   flex-direction: row;
+}
+
+@media (max-width: 1150px) {
+  .loginBackground {
+    display: none;
+  }
+  .loginMaster {
+    width: 100%;
+  }
 }
