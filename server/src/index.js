@@ -236,7 +236,11 @@ app.get('/api/recipes/:id', (req, res) => {
     res.json(formatRecipe(recipe));
 });
 
-// User saves recipe
+// ============================================
+// Saving logic
+// ============================================
+
+// Saves new recipe
 app.post('/api/recipes/:id/save', authenticate, async (req, res) => {
     try {
         const recipeId = Number(req.params.id);
@@ -259,15 +263,14 @@ app.post('/api/recipes/:id/save', authenticate, async (req, res) => {
 
         res.status(200).json({
             message: "Recipe saved",
-            savedRecipes: user.savedRecipes
+            savedRecipeIds: user.savedRecipes
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Unsave a recipe
-
+// Unsaves a recipe
 app.delete("/api/recipes/:id/save", authenticate, async (req, res) => {
   try {
     const recipeId = Number(req.params.id);
@@ -307,8 +310,8 @@ app.get("/api/saved-recipes", authenticate, async (req, res) => {
             .map(formatRecipe);
 
         res.json({
+            recipes: savedRecipes,
             savedRecipeIds: user.savedRecipes,
-            results: savedRecipes,
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
