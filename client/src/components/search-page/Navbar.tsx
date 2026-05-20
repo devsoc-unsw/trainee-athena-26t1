@@ -45,7 +45,7 @@ export default function Navbar() {
       </Link>
 
       <div className="navbar-actions">
-        <Link to="/create-recipe" className="navbar-icon-btn" aria-label="Saved recipes" onClick={(event) => handleCreateNav(event)}>
+        <Link to="/create-recipe" className="navbar-icon-btn" aria-label="Create recipe" onClick={(event) => handleCreateNav(event)}>
           <i className="bi bi-plus-lg" style={{ fontSize: '27px', color: '#fff' }} />
         </Link>
         <Link to="/saved-recipes" className="navbar-icon-btn" aria-label="Saved recipes" onClick={(event) => handleSavedRecipeNav(event)}>
