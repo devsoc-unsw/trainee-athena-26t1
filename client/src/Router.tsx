@@ -5,6 +5,7 @@ import Register from "./pages/Register";
 import SavedRecipes from "./pages/SavedRecipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import CreateRecipe from "./pages/CreateRecipe";
+import Profile from "./pages/Profile";
 
 export default function Router() {
   return (
@@ -15,6 +16,7 @@ export default function Router() {
       <Route path="/saved-recipes" element={<SavedRecipes />} />
       <Route path="/create-recipe" element={<CreateRecipe />} />
       <Route path="/recipes/:recipeId" element={<RecipeDetails />} />
+      <Route path="/profile" element={<Profile />} />
     </Routes>
   );
 }

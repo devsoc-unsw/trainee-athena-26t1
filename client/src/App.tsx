@@ -5,7 +5,10 @@ import { useLocation } from "react-router-dom";
 
 function App() {
   const location = useLocation();
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register'
+  const isAuthPage =
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/profile";
   return (
     <>
       <Navbar />

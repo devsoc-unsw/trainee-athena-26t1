@@ -33,6 +33,14 @@ export async function loginUser(email: string, password: string) {
     return response.data;
 }
 
+export async function changePassword(currentPassword: string, newPassword: string) {
+    const response = await api.post<{ message: string }>("/api/auth/change-password", {
+        currentPassword,
+        newPassword,
+    });
+    return response.data;
+}
+
 api.interceptors.request.use((config) => {
     const token = getAccessToken();
     if (token) {

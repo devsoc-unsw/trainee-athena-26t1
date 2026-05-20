@@ -73,6 +73,9 @@
   min-height: calc(100svh - 56px);
   height: calc(100svh - 56px);
   overflow: hidden;
+  justify-content: center;
+  align-items: center;  
+  align-content: center;
 }
 
 body {

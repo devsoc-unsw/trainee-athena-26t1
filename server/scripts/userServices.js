@@ -13,7 +13,7 @@ const {
 
 function validatePassword(password) {
 	if (password.length < 8 || !(/[a-z]/.test(password)) || !(/[A-Z]/.test(password))) {
-		throw new Error("Password Invalid");
+		throw new Error("Password must be 8 characters long and contain at least one lowercase and one uppercase letter");
 	}
 }
 

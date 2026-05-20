@@ -90,7 +90,7 @@ export default function Login() {
               label="Keep me signed in"
             />
             <Link component={RouterLink} to="/register">
-              Don&apos;t have an account? Register
+              Don&apos;t have an account?
             </Link>
           </Stack>
 
