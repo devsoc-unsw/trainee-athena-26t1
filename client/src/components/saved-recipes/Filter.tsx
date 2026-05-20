@@ -1,13 +1,38 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState } from "react";
+
 
 export interface FilterState {
   maxTime: number | "";
-  mealType: string;
-  difficulty: string;
+  vegetarian: boolean;
+  vegan: boolean;
+  glutenFree: boolean;
+  dairyFree: boolean;
+  calories: { min: number | null; max: number | null };
+  fat: { min: number | null; max: number | null };
+  protein: { min: number | null; max: number | null };
+  carbs: { min: number | null; max: number | null };
 }
 
-export default function Filter({ hasFilters, onApply }: { hasFilters: boolean, onApply: (filters: FilterState) => void }) {
+// default filterless
+const EMPTY_FILTERS: FilterState = {
+  maxTime: "",
+  vegetarian: false,
+  vegan: false,
+  glutenFree: false,
+  dairyFree: false,
+  calories: { min: null, max: null },
+  fat: { min: null, max: null },
+  protein: { min: null, max: null },
+  carbs: { min: null, max: null },
+};
+
+export default function Filter({
+  hasFilters,
+  onApply,
+}: {
+  hasFilters: boolean;
+  onApply: (filters: FilterState) => void;
+}) {
   // USE STATES + EFFECTS
   // on/off switch for expanding the button
   const [filterOpen, setFilterOpen] = useState(false);
@@ -33,18 +58,31 @@ export default function Filter({ hasFilters, onApply }: { hasFilters: boolean, o
     setFat({ min: null, max: null });
     setProtein({ min: null, max: null });
     setCarbs({ min: null, max: null });
+    onApply(EMPTY_FILTERS);
   };
 
 
+  
   const handleApply = () => {
-    onApply({ maxTime, mealType, difficulty });
-    setFilterOpen(false);
+    onApply({
+      maxTime,
+      vegetarian,
+      vegan,
+      glutenFree,
+      dairyFree,
+      calories,
+      fat,
+      protein,
+      carbs,
+    });
+    /* setFilterOpen(false); */
   };
+
 
   // component
   return (
      <div className="filterSection" >
-      {/* small vers (button before expansion) */}
+      <div className="filterHeader"> {/* small vers (button before expansion) */}
       <button className="filterBtn" onClick={() => setFilterOpen((o) => !o)}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginRight: 6 }}>
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
@@ -58,6 +96,9 @@ export default function Filter({ hasFilters, onApply }: { hasFilters: boolean, o
           Clear
         </button>
       )}
+      
+      </div>
+      
 
       {filterOpen && (
         <div className="filterPanel">

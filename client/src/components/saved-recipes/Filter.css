@@ -5,6 +5,12 @@
   position: relative;
 }
 
+.filterHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .filterBtn {
   display: inline-flex;
   align-items: center;
@@ -17,19 +23,19 @@
   font-size: 20px;
 
   cursor: pointer;
-  font-family: inherit;
   position: relative;
 }
-
 .clearBtn {
-  margin-left: 10;
   background: transparent;
-  border: 1px solid #444;
-  border-radius: 20;
-  padding: 6px 14px;
-  color: #999;
-  font-size: 14;
-  cursor: pointer,
+  border-radius: 12px;
+  border-color: #c0392b;
+  padding: 6px 12px;
+  color: #c0392b;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  margin-left: 6px;
 }
 
 .filterPanel {
@@ -174,7 +180,6 @@
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
-  font-family: inherit;
   letter-spacing: 0.05em;
   align-self: flex-end;
   margin-left: auto;

@@ -8,26 +8,52 @@ import "../components/saved-recipes/Filter.css"
 import "../components/saved-recipes/RecipeGrid.css"
 import "../components/saved-recipes/RecipeCard.css"
 import Filter from "../components/saved-recipes/Filter";
-
+import type { FilterState } from "../components/saved-recipes/Filter";
 // all the fields tracked by our filter
-interface FilterState {
-  maxTime: number | "";
-  mealType: string;
-  difficulty: string;
-}
-
 
 
 export default function SavedRecipes() {
   // filter tracking
-  const [applied, setApplied] = useState<FilterState>({ maxTime: "", mealType: "", difficulty: "" });
+  const [applied, setApplied] = useState<FilterState>({
+  maxTime: "",
+  vegetarian: false,
+  vegan: false,
+  glutenFree: false,
+  dairyFree: false,
+  calories: { min: null, max: null },
+  fat: { min: null, max: null },
+  protein: { min: null, max: null },
+  carbs: { min: null, max: null },
+  });
 
-  const hasFilters = Boolean(applied.maxTime || applied.mealType || applied.difficulty);
+  const hasFilters = Boolean(
+    applied.maxTime ||
+    applied.vegetarian ||
+    applied.vegan ||
+    applied.glutenFree ||
+    applied.dairyFree ||
+    applied.calories.min !== null || applied.calories.max !== null ||
+    applied.fat.min !== null || applied.fat.max !== null ||
+    applied.protein.min !== null || applied.protein.max !== null ||
+    applied.carbs.min !== null || applied.carbs.max !== null
+  );
 
   const filtered = RECIPES.filter((r) => {
-    if (applied.maxTime && parseInt(r.time) > parseInt(applied.maxTime)) return false;
-    if (applied.mealType.length > 0 && !applied.mealType.includes(r.meal)) return false;
-    if (applied.difficulty && r.difficulty !== applied.difficulty) return false;
+    // Time
+    if (applied.maxTime !== "" && r.readyInMinutes > applied.maxTime) return false;
+
+    // Diet booleans — only constrain when the box is checked
+    if (applied.vegetarian && !r.vegetarian) return false;
+    if (applied.vegan && !r.vegan) return false;
+    if (applied.glutenFree && !r.glutenFree) return false;
+    if (applied.dairyFree && !r.dairyFree) return false;
+
+    // Macro ranges
+    if (!inRange(getNutrient(r, "Calories"), applied.calories)) return false;
+    if (!inRange(getNutrient(r, "Fat"), applied.fat)) return false;
+    if (!inRange(getNutrient(r, "Protein"), applied.protein)) return false;
+    if (!inRange(getNutrient(r, "Carbohydrates"), applied.carbs)) return false;
+
     return true;
   });
 
@@ -45,12 +71,10 @@ export default function SavedRecipes() {
         {hasFilters && <span className="filterTag"> · filtered</span>}
       </div> */}
       <div className="recipeGridWrapper">
-        <RecipeGrid recipes={RECIPES} />
+        <RecipeGrid recipes={filtered} />
       </div>
       
     </div>
-
-   
 
     
   );
@@ -87,6 +111,27 @@ function RecipeGrid({ recipes, lastRecipeRef }: RecipeGridProps) {
   );
 }
 
+// helpers
+
+// fetches macros
+function getNutrient(recipe: Recipe, name: string): number | null {
+  const n = recipe.nutrition.nutrients.find(
+    (x) => x.name.toLowerCase() === name.toLowerCase()
+  );
+  return n ? n.amount : null;
+}
+
+// calc for range filter
+function inRange(
+  value: number | null,
+  range: { min: number | null; max: number | null }
+): boolean {
+  if (range.min === null && range.max === null) return true; // no filter set
+  if (value === null) return false; // filter set but recipe has no data
+  if (range.min !== null && value < range.min) return false;
+  if (range.max !== null && value > range.max) return false;
+  return true;
+}
 
 // test consts (hardcoded asf)
 
