@@ -1,10 +1,11 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import Item from './models/Item.js';
-import fs from 'fs';
 import Recipe from './models/Recipe.js';
+import User from './models/Auth.js';
 import { register, login, authenticate, changePassword } from '../scripts/userServices.js';
 
 dotenv.config();
@@ -74,6 +75,53 @@ app.post('/api/create-recipe', async (req, res) => {
     try {
         const newRecipe = await Recipe.create(req.body);
         res.status(201).json(newRecipe);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// User saves recipe
+app.post('/api/users/:userId/saved-recipes', async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { recipeId } = req.body;
+
+        const recipe = await Recipe.findById(recipeId);
+        if (!recipe) {
+            return res.status(404).json({ error: "Recipe not found" });
+        }
+
+        const user = await User.findOneAndUpdate(
+            { userId },
+            { $addToSet: { savedRecipes: recipe._id } },
+            { new: true }
+        ).populate("savedRecipes");
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "Recipe saved succesfully",
+            savedRecipes: user.savedRecipes
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Given a user's ID, get their saved recipes
+app.get('/api/users/:userId/saved-recipes', async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const user = await User.findOne({ userId }).populate("savedRecipes");
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json({ savedRecipes: user.savedRecipes });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
